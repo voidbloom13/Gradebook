@@ -1,0 +1,28 @@
+{
+    "name": "ASP.NET, Angular, and MS SQL Server Dev Environment",
+    "dockerComposeFile": "compose.yaml",
+    "service": "workspace",
+    "workspaceFolder": "/workspace/gradebook",
+    "features": {
+        "ghcr.io/devcontainers/features/common-utils:2": {
+            "installZsh": true,
+            "installOhMyZsh": true,
+            "configureZshAsDefaultShell": true
+        },
+        "ghcr.io/devcontainers/features/github-cli": {
+            "version": "latest"
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-dotnettools.csdevkit",
+                "angular.ng-template",
+                "dbaeumer.vscode-eslint",
+                "esbenp.prettier-vscode",
+                "ms-azuretools.vscode-docker",
+                "ms-mssql.mssql"
+            ]
+        }
+    }
+}
