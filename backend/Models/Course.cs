@@ -1,4 +1,5 @@
 namespace Backend.Models;
+
 public class Course
 {
     public Guid Id { get; set; }

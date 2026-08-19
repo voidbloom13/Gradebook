@@ -1,4 +1,5 @@
 namespace Backend.Models;
+
 public class Assignment
 {
     public Guid Id { get; set; }

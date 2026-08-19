@@ -1,4 +1,5 @@
 namespace Backend.Models;
+
 public class Term
 {
     public string Season { get; set; } = null!;
