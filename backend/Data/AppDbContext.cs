@@ -16,14 +16,17 @@ public class AppDbContext : DbContext
     public DbSet<AssignmentType> AssignmentTypes { get; set; }
     public DbSet<Grade> Grades { get; set; }
     public DbSet<Term> Terms { get; set; }
-    public DbSet<StudentCourse> StudentCourses { get; set; }
+    public DbSet<Enrollment> Enrollments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Term>()
-            .HasKey(t => new { t.Season, t.Year });
-        modelBuilder.Entity<StudentCourse>()
-            .HasKey(sc => new { sc.StudentId, sc.CourseId });
+            .HasKey(t => new { t.TermSeason, t.TermYear });
+        modelBuilder.Entity<Term>()
+            .Property(t => t.TermSeason)
+            .HasConversion<string>();
+        modelBuilder.Entity<Enrollment>()
+            .HasKey(e => new { e.StudentId, e.CourseId });
         modelBuilder.Entity<Grade>()
             .HasKey(g => new { g.StudentId, g.AssignmentId });
         modelBuilder.Entity<Course>()
@@ -34,5 +37,8 @@ public class AppDbContext : DbContext
                 c.TermSeason,
                 c.TermYear
             });
+        modelBuilder.Entity<Enrollment>()
+            .Property(e => e.EnrollmentStatus)
+            .HasConversion<string>();
     }
 }

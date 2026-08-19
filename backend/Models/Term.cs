@@ -1,8 +1,10 @@
+using Backend.Enums;
+
 namespace Backend.Models;
 
 public class Term
 {
-    public string Season { get; set; } = null!;
-    public int Year { get; set; }
+    public TermSeason TermSeason { get; set; }
+    public int TermYear { get; set; }
     public ICollection<Course> Courses { get; set; } = [];
 }
