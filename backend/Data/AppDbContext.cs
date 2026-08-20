@@ -20,6 +20,12 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Teacher>()
+            .Propert(t => t.Role)
+            .HasConversion<string>();
+        modelBuilder.Entity<Student>()
+            .Property(s => s.Role)
+            .HasConversion<string>();
         modelBuilder.Entity<Term>()
             .HasKey(t => new { t.TermSeason, t.TermYear });
         modelBuilder.Entity<Term>()

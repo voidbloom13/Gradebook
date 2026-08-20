@@ -1,3 +1,5 @@
+using Backend.Enums;
+
 namespace Backend.Models;
 
 public class Teacher
@@ -7,7 +9,7 @@ public class Teacher
     public string LastName { get; set; } = null!;
     public string Email { get; set; } = null!;
     public string PasswordHash { get; set; } = null!;
-    public bool IsAdmin { get; set; }
+    public Role Role { get; set; }
     public DateTime CreatedAt { get; set; }
     public ICollection<Course> Courses { get; set; } = [];
 }
