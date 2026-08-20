@@ -8,7 +8,7 @@ public class Course
     public string CourseName { get; set; } = null!;
     public Guid TeacherId { get; set; }
     public DateTime CreatedAt { get; set; }
-    public TermSeason TermSeason { get; set; } = null!;
+    public TermSeason TermSeason { get; set; }
     public int TermYear { get; set; }
     public Teacher Teacher { get; set; } = null!;
     public Term Term { get; set; } = null!;

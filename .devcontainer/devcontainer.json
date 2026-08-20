@@ -1,8 +1,13 @@
 {
-    "name": "ASP.NET, Angular, and MS SQL Server Dev Environment",
+    "name": "Angular, .NET, PostgreSQL",
     "dockerComposeFile": "compose.yaml",
     "service": "workspace",
     "workspaceFolder": "/workspace/gradebook",
+    "forwardPorts": [
+        4200,
+        5432,
+        8080
+    ],
     "features": {
         "ghcr.io/devcontainers/features/common-utils:2": {
             "installZsh": true,
@@ -13,16 +18,24 @@
             "version": "latest"
         }
     },
+    "containerEnv": {
+        "ASPNETCORE_URLS": "http://0.0.0.0:8080"
+    },
     "customizations": {
         "vscode": {
             "extensions": [
                 "ms-dotnettools.csdevkit",
+                "ms-dotnettools.vscode-dotnet-runtime",
                 "angular.ng-template",
                 "dbaeumer.vscode-eslint",
                 "esbenp.prettier-vscode",
-                "ms-azuretools.vscode-docker",
-                "ms-mssql.mssql"
+                "ckolkman.vscode-postgres",
+                "ms-azuretools.vscode-docker"
             ]
         }
+    },
+    "postCreateCommand": {
+        "dotnet-restore": "cd /workspace/gradebook/backend && dotnet restore",
+        "frontend-install": "cd /workspace/gradebook/frontend && npm install"
     }
 }

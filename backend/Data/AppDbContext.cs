@@ -30,6 +30,9 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Grade>()
             .HasKey(g => new { g.StudentId, g.AssignmentId });
         modelBuilder.Entity<Course>()
+            .Property(c => c.TermSeason)
+            .HasConversion<string>();
+        modelBuilder.Entity<Course>()
             .HasOne(c => c.Term)
             .WithMany(t => t.Courses)
             .HasForeignKey(c => new
