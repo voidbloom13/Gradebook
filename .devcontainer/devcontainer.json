@@ -34,8 +34,9 @@
             ]
         }
     },
+    "initializeCommand": "sh -c 'test -f \"${localWorkspaceFolder}/.devcontainer/.env\" || cp \"${localWorkspaceFolder}/.devcontainer/.env.example\" \"${localWorkspaceFolder}/.devcontainer/.env\"'",
     "postCreateCommand": {
-        "dotnet-restore": "cd /workspace/gradebook/backend && dotnet restore",
-        "frontend-install": "cd /workspace/gradebook/frontend && npm install"
+        "dotnet-restore": "cd ${localWorkspaceFolder}/backend && dotnet restore",
+        "frontend-install": "cd ${localWorkspaceFolder}/frontend && npm install"
     }
 }
