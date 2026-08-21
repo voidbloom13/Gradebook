@@ -6,9 +6,6 @@ public class Session
     public Guid UserId { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime ExpiresAt { get; set; }
+    public User User { get; set; } = null!;
     public string IpAddress { get; set; } = null!;
-
-    // Research combining Student and Teacher into User
-    // ICollection based on Role?
-    // ICollection<Session> Sessions in User.cs
 }

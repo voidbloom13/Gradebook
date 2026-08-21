@@ -9,6 +9,7 @@ public class AppDbContext : DbContext
     {
     }
 
+    public DbSet<User> Users { get; set; }
     public DbSet<Student> Students { get; set; }
     public DbSet<Teacher> Teachers { get; set; }
     public DbSet<Course> Courses { get; set; }
@@ -17,14 +18,16 @@ public class AppDbContext : DbContext
     public DbSet<Grade> Grades { get; set; }
     public DbSet<Term> Terms { get; set; }
     public DbSet<Enrollment> Enrollments { get; set; }
+    public DbSet<Session> Sessions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Teacher>()
-            .Property(t => t.Role)
-            .HasConversion<string>();
-        modelBuilder.Entity<Student>()
-            .Property(s => s.Role)
+        modelBuilder.Entity<User>()
+            .HasDiscriminator<string>("UserType")
+            .HasValue<Student>("Student")
+            .HasValue<Teacher>("Teacher");
+        modelBuilder.Entity<User>()
+            .Property(u => u.Role)
             .HasConversion<string>();
         modelBuilder.Entity<Term>()
             .HasKey(t => new { t.TermSeason, t.TermYear });
