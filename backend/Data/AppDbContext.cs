@@ -21,7 +21,7 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Teacher>()
-            .Propert(t => t.Role)
+            .Property(t => t.Role)
             .HasConversion<string>();
         modelBuilder.Entity<Student>()
             .Property(s => s.Role)

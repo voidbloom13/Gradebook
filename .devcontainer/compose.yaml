@@ -8,9 +8,9 @@ services:
             ConnectionStrings__DefaultConnection: >-
                 Host=db;
                 Port=5432;
-                Database=${PG_DATABASE:-GradebookDb};
-                Username=${PG_USER:-user};
-                Password=${PG_PASSWORD:?PG_PASSWORD must be set in .env};
+                Database=GradebookDb;
+                Username=user;
+                Password=P@ssw0rd123;
         volumes:
             - ..:/workspace/gradebook
         depends_on:
@@ -21,18 +21,18 @@ services:
         image: postgres:17-alpine
         container_name: db
         environment:
-            POSTGRES_USER: ${PG_USER:-user}
-            POSTGRES_PASSWORD: ${PG_PASSWORD:?PG_PASSWORD must be set in .env}
-            POSTGRES_DB: ${PG_DATABASE:-GradebookDb}
+            POSTGRES_USER: user
+            POSTGRES_PASSWORD: P@ssw0rd123
+            POSTGRES_DB: GradebookDb
         ports:
             - "5432:5432"
         volumes:
             - gradebook-db-data:/var/lib/postgresql/data
         healthcheck:
-            test: ["CMD-SHELL", "pg_isready -U ${PG_USER:-user} -d ${PG_DATABASE:-GradebookDb}"]
+            test: ["CMD-SHELL", "pg_isready -U user -d GradebookDb"]
             interval: 5s
             timeout: 5s
-            retries: 10
+            retries: 30
 
 volumes:
     gradebook-db-data:

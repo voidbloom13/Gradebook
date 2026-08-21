@@ -36,7 +36,7 @@
     },
     "initializeCommand": "sh -c 'test -f \"${localWorkspaceFolder}/.devcontainer/.env\" || cp \"${localWorkspaceFolder}/.devcontainer/.env.example\" \"${localWorkspaceFolder}/.devcontainer/.env\"'",
     "postCreateCommand": {
-        "dotnet-restore": "cd ${localWorkspaceFolder}/backend && dotnet restore",
-        "frontend-install": "cd ${localWorkspaceFolder}/frontend && npm install"
+        "dotnet-restore": "cd ${containerWorkspaceFolder}/backend && dotnet restore",
+        "frontend-install": "cd ${containerWorkspaceFolder}/frontend && npm install"
     }
 }
