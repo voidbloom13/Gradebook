@@ -1,0 +1,10 @@
+CURRENT NEXT STEPS:
+- Double check Models and AppDbContext
+- Create placeholder Angular pages for /login, /dashboard
+- Create backend/Services/AuthenticationService.cs
+
+
+User navigates to Angular ("/"), sends session cookie to backend/api/auth/login
+backend/api/auth/login validates session cookie
+	If successful, reroutes to Angular ("/dashboard")
+	If unsuccessful, reroutes to Angular ("/login")
