@@ -29,15 +29,25 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<User>()
             .Property(u => u.Role)
             .HasConversion<string>();
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Email)
+            .IsUnique();
+
         modelBuilder.Entity<Term>()
             .HasKey(t => new { t.TermSeason, t.TermYear });
         modelBuilder.Entity<Term>()
             .Property(t => t.TermSeason)
             .HasConversion<string>();
+
         modelBuilder.Entity<Enrollment>()
             .HasKey(e => new { e.StudentId, e.CourseId });
+        modelBuilder.Entity<Enrollment>()
+            .Property(e => e.EnrollmentStatus)
+            .HasConversion<string>();
+
         modelBuilder.Entity<Grade>()
             .HasKey(g => new { g.StudentId, g.AssignmentId });
+
         modelBuilder.Entity<Course>()
             .Property(c => c.TermSeason)
             .HasConversion<string>();
@@ -49,8 +59,6 @@ public class AppDbContext : DbContext
                 c.TermSeason,
                 c.TermYear
             });
-        modelBuilder.Entity<Enrollment>()
-            .Property(e => e.EnrollmentStatus)
-            .HasConversion<string>();
+
     }
 }

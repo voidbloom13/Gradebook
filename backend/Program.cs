@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Backend.Data;
+using Backend.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
+app.MapAuthenticationEndpoints();
 
 app.Run();
