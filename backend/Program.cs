@@ -16,6 +16,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 var app = builder.Build();
 
+app.MapGet("/", () => "API is running...");
 app.MapAuthenticationEndpoints();
 
 app.Run();

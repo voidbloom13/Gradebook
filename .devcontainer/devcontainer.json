@@ -18,9 +18,6 @@
             "version": "latest"
         }
     },
-    "containerEnv": {
-        "ASPNETCORE_URLS": "http://0.0.0.0:8080"
-    },
     "customizations": {
         "vscode": {
             "extensions": [
