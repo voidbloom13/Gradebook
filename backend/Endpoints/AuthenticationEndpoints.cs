@@ -16,19 +16,16 @@ public static class AuthenticationEndpoints
 
     private static IResult ValidateSession()
     {
-        HttpContext context = new HttpContext();
-        return AuthenticationService.ValidateSessionService(context); // Validate cookie/session, return 200(frontend/{role}/dashboard)/401(frontend/login)
+        return AuthenticationService.ValidateSessionService(HttpContext context); // Validate cookie/session, return 200(frontend/{role}/dashboard)/401(frontend/login)
     }
 
     private static IResult LoginUser()
     {
-        HttpContext context = new HttpContext();
-        return AuthenticationService.LoginUserService(context); // Validates user credentials, creates a new Session, creates and returns cookie
+        return AuthenticationService.LoginUserService(HttpContext context); // Validates user credentials, creates a new Session, creates and returns cookie
     }
 
     private static IResult LogoutUser()
     {
-        HttpContext context = new HttpContext();
-        return AuthenticationServiceLogoutUserService(context); // Adds RevokedAt to Session, force-reload to fail ValidateSession()
+        return AuthenticationServiceLogoutUserService(HttpContext context); // Adds RevokedAt to Session, force-reload to fail ValidateSession()
     }
 }

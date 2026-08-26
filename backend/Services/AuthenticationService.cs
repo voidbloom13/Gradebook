@@ -4,6 +4,8 @@ public static class AuthenticationService
 {
     public static IResult ValidateSessionService(HttpContext context)
     {
+        if (!context.User.Identity?.IsAuthenticated ?? true)
+            return Results.Unauthorized();
         return Results.Ok();
     }
 
