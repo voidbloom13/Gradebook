@@ -1,3 +1,5 @@
+using Backend.Services;
+
 namespace Backend.Endpoints;
 
 public static class AuthenticationEndpoints
@@ -14,16 +16,19 @@ public static class AuthenticationEndpoints
 
     private static IResult ValidateSession()
     {
-        return Results.Ok(); // Validate cookie/session, return 200(frontend/{role}/dashboard)/401(frontend/login)
+        HttpContext context = new HttpContext();
+        return AuthenticationService.ValidateSessionService(context); // Validate cookie/session, return 200(frontend/{role}/dashboard)/401(frontend/login)
     }
 
     private static IResult LoginUser()
     {
-        return Results.Ok(); // Validates user credentials, creates a new Session, creates and returns cookie
+        HttpContext context = new HttpContext();
+        return AuthenticationService.LoginUserService(context); // Validates user credentials, creates a new Session, creates and returns cookie
     }
 
     private static IResult LogoutUser()
     {
-        return Results.Ok(); // Adds RevokedAt to Session, force-reload to fail ValidateSession()
+        HttpContext context = new HttpContext();
+        return AuthenticationServiceLogoutUserService(context); // Adds RevokedAt to Session, force-reload to fail ValidateSession()
     }
 }
