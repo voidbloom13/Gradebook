@@ -11,5 +11,4 @@ public abstract class User
     public string? PasswordHash { get; set; } = null!;
     public Role Role { get; set; }
     public DateTime CreatedAt { get; set; }
-    public ICollection<Session> Sessions { get; set; } = [];
 }

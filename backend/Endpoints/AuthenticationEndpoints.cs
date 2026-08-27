@@ -9,6 +9,7 @@ public static class AuthenticationEndpoints
     {
         app.MapGet("/api/auth/session", ValidateSession);
         app.MapPost("/api/auth/login", LoginUser);
+        app.MapPost("/api/auth/signup", CreateNewStudent); // admin routes will create new Teachers
         app.MapPost("/api/auth/logout", LogoutUser);
 
         return app;
@@ -16,16 +17,21 @@ public static class AuthenticationEndpoints
 
     private static IResult ValidateSession()
     {
-        return AuthenticationService.ValidateSessionService(HttpContext context); // Validate cookie/session, return 200(frontend/{role}/dashboard)/401(frontend/login)
+        return AuthenticationService.ValidateSessionService(context);
     }
 
     private static IResult LoginUser()
     {
-        return AuthenticationService.LoginUserService(HttpContext context); // Validates user credentials, creates a new Session, creates and returns cookie
+        return AuthenticationService.LoginUserService(context);
+    }
+
+    private static IResult CreateNewStudent()
+    {
+        return AuthenticationService.CreateNewStudentService(context);
     }
 
     private static IResult LogoutUser()
     {
-        return AuthenticationServiceLogoutUserService(HttpContext context); // Adds RevokedAt to Session, force-reload to fail ValidateSession()
+        return AuthenticationServiceLogoutUserService(context);
     }
 }

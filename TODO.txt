@@ -4,7 +4,29 @@ CURRENT NEXT STEPS:
 - Create backend/Services/AuthenticationService.cs
 
 
-User navigates to Angular ("/"), sends session cookie to backend/api/auth/login
-backend/api/auth/login validates session cookie
-	If successful, reroutes to Angular ("/dashboard")
-	If unsuccessful, reroutes to Angular ("/login")
+NG("/") -> GET("/api/auth/session") -> 200/401
+|- 200 -> NG("/dashboard")
+|- 401 -> NG("/login", note: login also handles signup)
+
+Fresh Instance:
+Angular loads /, GET /api/auth/session
+ |
+ V
+UseAuthentication(), no Auth Cookie, HttpContext.User = Anonymous, returns 401
+ |
+ V
+Angular routes to /login, validates inputs, HTTP POST /api/auth/login
+ |
+ V
+POST /api/auth/login validates against DB, creates Claims, SignInAsync(),
+Create Authentication Ticket, Create Cookie
+ |
+ V
+Angular loads /, GET /api/auth/session
+ |
+ V
+UseAuthentication(), validates Auth Cookie, rebuilds ClaimsPrincipal, 
+HttpContext.User populates, return 200
+ |
+ V
+Angular loads /dashboard
