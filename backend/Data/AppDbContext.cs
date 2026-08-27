@@ -18,7 +18,6 @@ public class AppDbContext : DbContext
     public DbSet<Grade> Grades { get; set; }
     public DbSet<Term> Terms { get; set; }
     public DbSet<Enrollment> Enrollments { get; set; }
-    public DbSet<Session> Sessions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

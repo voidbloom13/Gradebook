@@ -7,31 +7,34 @@ public static class AuthenticationEndpoints
     public static IEndpointRouteBuilder MapAuthenticationEndpoints(
         this IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/auth/session", ValidateSession);
-        app.MapPost("/api/auth/login", LoginUser);
-        app.MapPost("/api/auth/signup", CreateNewStudent); // admin routes will create new Teachers
-        app.MapPost("/api/auth/logout", LogoutUser);
+        app.MapGet("/api/auth/session", (HttpContext ctx) =>
+        {
+            var result = AuthenticationService.ValidateSessionService(ctx);
+            Console.WriteLine(result);
+            return result;
+        });
+
+        app.MapPost("/api/auth/login", (HttpContext ctx) =>
+        {
+            var result = AuthenticationService.LoginUserService(ctx);
+            Console.WriteLine(result);
+            return result;
+        });
+
+        app.MapPost("/api/auth/signup", (HttpContext ctx) =>
+        {
+            var result = AuthenticationService.CreateNewStudentService(ctx);
+            Console.WriteLine(result);
+            return result;
+        }); // admin routes will create new Teachers
+        
+        app.MapPost("/api/auth/logout", (HttpContext ctx) =>
+        {
+            var result = AuthenticationService.LogoutUserService(ctx);
+            Console.WriteLine(result);
+            return result;
+        });
 
         return app;
-    }
-
-    private static IResult ValidateSession()
-    {
-        return AuthenticationService.ValidateSessionService(context);
-    }
-
-    private static IResult LoginUser()
-    {
-        return AuthenticationService.LoginUserService(context);
-    }
-
-    private static IResult CreateNewStudent()
-    {
-        return AuthenticationService.CreateNewStudentService(context);
-    }
-
-    private static IResult LogoutUser()
-    {
-        return AuthenticationServiceLogoutUserService(context);
     }
 }
