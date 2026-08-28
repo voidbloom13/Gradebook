@@ -39,4 +39,8 @@ app.UseAuthorization();
 app.MapGet("/", () => "API is running...");
 app.MapAuthenticationEndpoints();
 
+using var scope = app.Services.CreateScope();
+var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+dbContext.Database.Migrate();
+
 app.Run();
