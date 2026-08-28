@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Backend.Data;
 using Backend.Endpoints;
+using Backend.Enums;
+using Backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,9 +14,33 @@ var connectionString =
         "Connection String 'DefaultConnection' not found."
     );
 
+builder.Services.AddSingleton<IPasswordHasher, PasswordHasherService>();
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(connectionString)
-);
+{
+    options
+        .UseNpgsql(connectionString)
+        .UseSeeding((context, _) =>
+        {
+            if (!context.Users.Any(u => u.Role == Role.Admin))
+            {
+                var passwordHasher = context.GetService<IPasswordHasher>();
+
+                context.Users.Add(new User
+                {
+                    Id = Guid.NewGuid(),
+                    FirstName = "Admin",
+                    LastName = "Admin",
+                    Email = "admin@gradebook.local",
+                    PasswordHash = passwordHasher.Hash("@Admin123"),
+                    Role = Role.Admin,
+                    CreatedAt = DateTime.UtcNow
+                });
+                
+                context.SaveChanges();
+            }
+        }))
+});
 
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
