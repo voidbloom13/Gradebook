@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Backend.Data;
 using Backend.Endpoints;
-using Backend.Enums;
+// using Backend.Enums;
+// using Backend.Models;
 using Backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,30 +17,8 @@ var connectionString =
 builder.Services.AddSingleton<IPasswordHasher, PasswordHasherService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-{
-    options
-        .UseNpgsql(connectionString)
-        .UseSeeding((context, _) =>
-        {
-            if (!context.Users.Any(u => u.Role == Role.Admin))
-            {
-                var passwordHasher = context.GetService<IPasswordHasher>();
-
-                context.Users.Add(new User
-                {
-                    Id = Guid.NewGuid(),
-                    FirstName = "Admin",
-                    LastName = "Admin",
-                    Email = "admin@gradebook.local",
-                    PasswordHash = passwordHasher.Hash("@Admin123"),
-                    Role = Role.Admin,
-                    CreatedAt = DateTime.UtcNow
-                });
-                
-                context.SaveChanges();
-            }
-        }))
-});
+    options.UseNpgsql(connectionString)  
+);
 
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -66,8 +44,27 @@ app.UseAuthorization();
 app.MapGet("/", () => "API is running...");
 app.MapAuthenticationEndpoints();
 
-using var scope = app.Services.CreateScope();
-var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-dbContext.Database.Migrate();
+await app.SeedInitialDataAsync();
+// using (var scope = app.Services.CreateScope())
+// {
+//     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+//     var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
+//     await dbContext.Database.MigrateAsync();
+//     if (!await dbContext.Users.AnyAsync(u => u.Role == Role.Admin))
+//     {
+//         dbContext.Users.Add(new Teacher
+//         {
+//             Id = Guid.NewGuid(),
+//             FirstName = "Admin",
+//             LastName = "Admin",
+//             Email = "admin@gradebook.local",
+//             PasswordHash = passwordHasher.Hash("@Admin123"),
+//             Role = Role.Admin,
+//             CreatedAt = DateTime.UtcNow
+//         });
+        
+//         await dbContext.SaveChangesAsync();
+//     }
+// };
 
 app.Run();
