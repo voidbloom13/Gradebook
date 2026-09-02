@@ -40,18 +40,20 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AngularPolicy", policy =>
     {
-        var frontendUrl = "http://0.0.0.0:4200"
-        policy.WithOrigins(frontendUrl)
+        var frontendUrl = "http://localhost:4200";
+        policy
+            .WithOrigins(frontendUrl)
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 
 var app = builder.Build();
 
+app.UseCors("AngularPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors("AngularPolicy");
 
 app.MapGet("/", () => "API is running...");
 app.MapAuthenticationEndpoints();
