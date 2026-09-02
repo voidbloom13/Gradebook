@@ -1,3 +1,4 @@
+using Backend.Data;
 using Backend.Services;
 
 namespace Backend.Endpoints;
@@ -14,9 +15,9 @@ public static class AuthenticationEndpoints
             return result;
         });
 
-        app.MapPost("/api/auth/login", (HttpContext ctx) =>
+        app.MapPost("/api/auth/login", (HttpContext ctx, AppDbContext db) =>
         {
-            var result = AuthenticationService.LoginUserService(ctx);
+            var result = AuthenticationService.LoginUserService(ctx, db);
             Console.WriteLine(result);
             return result;
         });

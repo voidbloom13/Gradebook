@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../../services/auth';
 import { LoginRequest } from '../../../services/models/login-request';
@@ -12,11 +13,15 @@ import { LoginRequest } from '../../../services/models/login-request';
 })
 
 // Add state for password input type="password"/"text" to toggle visibility
+// Add styling for invalid form fields
+// Add logout button to Dashboard and handle /api/auth/logout route
+// -- Plan out Dashboard component structure. This is meant to be a hub for all actions and will grow substantially
 
 export class LoginForm {
   private authService = inject(AuthService);
   private formBuilder = inject(FormBuilder);
-  private isSubmitting = true;
+  private router = inject(Router);
+  public isSubmitting = false;
   loginRequestForm = this.formBuilder.group({
     email: [
       '',
@@ -36,36 +41,43 @@ export class LoginForm {
   })
 
   onSubmit(): void {
+    this.isSubmitting  = true;
     // Create new LoginRequest object and POST /api/auth/login
     if (this.loginRequestForm.invalid) {
-      this.loginRequestForm.markAllAstouched();
+      this.loginRequestForm.markAllAsTouched;
       return;
     }
 
-    const loginRequest: LoginRequest = {
-      email: this.loginRequestForm.value.email,
-      password: this.loginRequestForm.value.password
-    }
+    const loginRequest = this.loginRequestForm.getRawValue() as LoginRequest;
+    loginRequest.email = loginRequest.email.toLowerCase();
 
     this.authService.login(loginRequest).subscribe({
       next: () => {
         this.isSubmitting = false;
+        this.router.navigate(['/dashboard']);
       },
       error: (e: HttpErrorResponse) => {
         switch (e.status) {
           case 0:
+            console.log(e.message);
             break;
           case 400:
+            console.log(e.message);
             break;
           case 401:
+            console.log(e.message);
             break;
           case 403:
+            console.log(e.message);
             break;
           case 429:
+            console.log(e.message);
             break;
           case 500:
+            console.log(e.message);
             break;
           default:
+            console.log(e.message);
             break;
         }
         this.isSubmitting = false;
