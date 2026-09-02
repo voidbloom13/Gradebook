@@ -19,8 +19,8 @@ export class SessionCheck {
       next: () => {
         this.router.navigate(['/dashboard']);
       },
-      error: (error: HttpErrorResponse) => {
-        if (error.status === 401) {
+      error: (e: HttpErrorResponse) => {
+        if (e.status === 401) {
           this.router.navigate(['/login']);
         }
       }
