@@ -13,7 +13,7 @@ export class AuthService {
 
     checkSession() {
         return this.http.get(
-            `${environment.apiUrl}/api/auth/session`, 
+            `${environment.apiUrl}/api/auth/session`,
             { withCredentials: true }
         );
     }
@@ -37,6 +37,7 @@ export class AuthService {
     logout() {
         return this.http.post(
             `${environment.apiUrl}/api/auth/logout`,
+            {},
             { withCredentials: true }
         );
     }

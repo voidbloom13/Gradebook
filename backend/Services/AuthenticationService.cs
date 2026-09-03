@@ -80,7 +80,7 @@ public static class AuthenticationService
 
     public static async Task<IResult> LogoutUserService(HttpContext context)
     {
-        await context.SignOutAsync();
+        await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return Results.Ok();
     }
 }

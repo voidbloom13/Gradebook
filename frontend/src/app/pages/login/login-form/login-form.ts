@@ -2,11 +2,13 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../../../services/auth';
 import { LoginRequest } from '../../../services/models/login-request';
 
 @Component({
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, FontAwesomeModule],
   selector: 'app-login-form',
   styleUrl: './login-form.css',
   templateUrl: './login-form.html',
@@ -22,7 +24,10 @@ export class LoginForm {
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
   public showPassword = false;
+  public faEye = faEye;
+  public faEyeSlash = faEyeSlash;
   public isSubmitting = false;
+
   loginRequestForm = this.formBuilder.group({
     email: [
       '',
@@ -48,8 +53,8 @@ export class LoginForm {
   onSubmit(): void {
     this.isSubmitting  = true;
     // Create new LoginRequest object and POST /api/auth/login
+    this.loginRequestForm.markAllAsTouched;
     if (this.loginRequestForm.invalid) {
-      this.loginRequestForm.markAllAsTouched;
       return;
     }
 

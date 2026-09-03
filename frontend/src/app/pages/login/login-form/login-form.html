@@ -1,16 +1,21 @@
-<form class="w-1/2 flex flex-col items-center justify-center" [formGroup]="loginRequestForm" (ngSubmit)="onSubmit()">
-  <label class="w-full mb-1 font-bold text-lg text-left text-cyan-50" for="email">Email</label>
-  <input class="w-full mb-2 px-2 py-1 bg-cyan-100 focus:bg-cyan-50 border border-cyan-950 rounded-sm outline-none active:outline-none" id="email" type="email" formControlName="email" />
-  <label class="w-full mb-1 font-bold text-lg text-left text-cyan-50" for="password">Password</label>
-  <div>
-    <input class="w-full mb-2 px-2 py-1 bg-cyan-100 focus:bg-cyan-50 border border-cyan-950 rounded-sm outline-none active:outline-none" id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password" />
-    <button class="w-8 h-8" type="button" (click)="togglePasswordVisibility()"></button>
+<form class="w-1/2 flex flex-col gap-2 items-center justify-center" [formGroup]="loginRequestForm" (ngSubmit)="onSubmit()">
+  <div class="w-full">
+  <label class="w-full font-bold text-lg text-left text-cyan-50" for="email">Email</label>
+  <input class="w-full px-2 py-1 bg-cyan-100 focus:bg-cyan-50 border border-cyan-950 rounded-sm outline-none active:outline-none" [class.border-red-500]="loginRequestForm.controls.email.invalid && loginRequestForm.controls.email.touched" id="email" type="email" formControlName="email" />
   </div>
-  <button class="w-28 px-2 py-1 text-cyan-800 bg-cyan-200 hover:bg-cyan-50 active:bg-cyan-50 border border-cyan-950 rounded-sm transition-all duration-150" id="login-submit" type="submit" [disabled]="loginRequestForm.invalid || isSubmitting">Login</button>
+  <div class="w-full">
+  <label class="w-full font-bold text-lg text-left text-cyan-50" for="password">Password</label>
+  <div class="w-full flex gap-2 items-center justify-between">
+    <input class="w-full px-2 py-1 bg-cyan-100 focus:bg-cyan-50 border border-cyan-950 rounded-sm outline-none active:outline-none" [class.border-red-500]="loginRequestForm.controls.password.invalid && loginRequestForm.controls.password.touched" id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password" />
+    <button class="text-cyan-50 align-middle" type="button" (click)="togglePasswordVisibility()">
+      <fa-icon [icon]="showPassword ? faEyeSlash : faEye"></fa-icon>
+    </button>
+  </div>
+  </div>
+  <button class="w-28 px-2 py-1 text-cyan-800 bg-cyan-200 hover:bg-cyan-50 active:bg-cyan-50 border border-cyan-950 rounded-sm transition-all duration-150" id="login-submit" type="submit" [disabled]="isSubmitting">Login</button>
 </form>
 <!--
   TODO:
-  - Add validation for fields
-  - Create visibility toggle for password
-  - Complete onSubmit() in login-form.ts
+  -- Style Invalid fields
+  -- Style Toggle Password button and add FontAwesome icon
 -->
