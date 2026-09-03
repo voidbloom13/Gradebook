@@ -78,8 +78,9 @@ public static class AuthenticationService
         return Results.Ok();
     }
 
-    public static IResult LogoutUserService(HttpContext context)
+    public static async Task<IResult> LogoutUserService(HttpContext context)
     {
+        await context.SignOutAsync();
         return Results.Ok();
     }
 }

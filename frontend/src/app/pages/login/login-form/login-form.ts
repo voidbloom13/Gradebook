@@ -21,6 +21,7 @@ export class LoginForm {
   private authService = inject(AuthService);
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
+  public showPassword = false;
   public isSubmitting = false;
   loginRequestForm = this.formBuilder.group({
     email: [
@@ -39,6 +40,10 @@ export class LoginForm {
       ]
     ]
   })
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
 
   onSubmit(): void {
     this.isSubmitting  = true;

@@ -10,30 +10,22 @@ public static class AuthenticationEndpoints
     {
         app.MapGet("/api/auth/session", (HttpContext ctx) =>
         {
-            var result = AuthenticationService.ValidateSessionService(ctx);
-            Console.WriteLine(result);
-            return result;
+            return AuthenticationService.ValidateSessionService(ctx);
         });
 
         app.MapPost("/api/auth/login", (HttpContext ctx, AppDbContext db) =>
         {
-            var result = AuthenticationService.LoginUserService(ctx, db);
-            Console.WriteLine(result);
-            return result;
+            return AuthenticationService.LoginUserService(ctx, db);
         });
 
         app.MapPost("/api/auth/signup", (HttpContext ctx) =>
         {
-            var result = AuthenticationService.CreateNewStudentService(ctx);
-            Console.WriteLine(result);
-            return result;
+            return AuthenticationService.CreateNewStudentService(ctx);
         }); // admin routes will create new Teachers
         
         app.MapPost("/api/auth/logout", (HttpContext ctx) =>
         {
-            var result = AuthenticationService.LogoutUserService(ctx);
-            Console.WriteLine(result);
-            return result;
+            return AuthenticationService.LogoutUserService(ctx);
         });
 
         return app;
