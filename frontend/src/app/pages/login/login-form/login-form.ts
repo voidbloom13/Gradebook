@@ -14,9 +14,6 @@ import { LoginRequest } from '../../../services/models/login-request';
   templateUrl: './login-form.html',
 })
 
-// Add state for password input type="password"/"text" to toggle visibility
-// Add styling for invalid form fields
-// Add logout button to Dashboard and handle /api/auth/logout route
 // -- Plan out Dashboard component structure. This is meant to be a hub for all actions and will grow substantially
 
 export class LoginForm {
@@ -49,12 +46,8 @@ export class LoginForm {
     ]
   })
 
-  togglePasswordVisibility() {
-    this.showPassword = !this.showPassword;
-  }
-
   onSubmit(): void {
-    this.isSubmitting  = true;
+    this.isSubmitting = true;
     // Create new LoginRequest object and POST /api/auth/login
     this.loginRequestForm.markAllAsTouched();
     if (this.loginRequestForm.invalid) {
@@ -70,30 +63,8 @@ export class LoginForm {
         this.isSubmitting = false;
         this.router.navigate(['/dashboard']);
       },
-      error: (e: HttpErrorResponse) => {
-        switch (e.status) {
-          case 0:
-            console.log(e.message);
-            break;
-          case 400:
-            console.log(e.message);
-            break;
-          case 401:
-            console.log(e.message);
-            break;
-          case 403:
-            console.log(e.message);
-            break;
-          case 429:
-            console.log(e.message);
-            break;
-          case 500:
-            console.log(e.message);
-            break;
-          default:
-            console.log(e.message);
-            break;
-        }
+      error: () => {
+        console.log("Error submitting form.");
         this.isSubmitting = false;
       }
     });

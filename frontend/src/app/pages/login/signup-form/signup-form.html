@@ -1,1 +1,62 @@
-<p>signup works!</p>
+<form class="w-full p-4 flex flex-col gap-2 items-center justify-center" [formGroup]="signupRequestForm" (ngSubmit)="onSubmit()">
+  <div class="w-full">
+    <div class="w-full relative">
+      <label class="font-bold text-lg text-left text-cyan-50" for="firstName">First Name</label>
+      @if (signupRequestForm.controls.firstName.touched) {
+        @if (signupRequestForm.controls.firstName.hasError('required')) {
+          <span class="absolute right-0 top-1/2 -translate-y-1/2 min-w-fit px-2 py-[2px] inline-flex items-center align-middle text-sm leading-none bg-red-100 border border-red-500 rounded-sm">
+            First Name is required.
+          </span>
+        }
+        @if (signupRequestForm.controls.firstName.hasError('minlength') || signupRequestForm.controls.firstName.hasError('maxlength')) {
+          <span class="absolute right-0 top-1/2 -translate-y-1/2 min-w-fit px-2 py-[2px] inline-flex items-center align-middle text-sm leading-none bg-red-100 border border-red-500 rounded-sm">
+            First Name must be between {{ nameMinLength }} and {{ nameMaxLength }} characters.
+          </span>
+        }
+        @if (signupRequestForm.controls.firstName.hasError('pattern')) {
+          <span class="absolute right-0 top-1/2 -translate-y-1/2 min-w-fit px-2 py-[2px] inline-flex items-center align-middle text-sm leading-none bg-red-100 border border-red-500 rounded-sm">
+            First Name can only contain letters, spaces, hyphens, and apostrophes.
+          </span>
+        }
+      }
+    </div>
+    <input class="w-full px-2 py-1 bg-cyan-100 focus:bg-cyan-50 border border-cyan-950 rounded-sm outline-none active:outline-none" [class.border-red-500]="signupRequestForm.controls.firstName.invalid && signupRequestForm.controls.firstName.touched" id="firstName" type="text" formControlName="firstName" />
+  </div>
+  <div class="w-full">
+    <div class="w-full relative">
+      <label class="font-bold text-lg text-left text-cyan-50" for="lastName">Last Name</label>
+      @if (signupRequestForm.controls.lastName.touched) {
+        @if (signupRequestForm.controls.lastName.hasError('required')) {
+          <span class="absolute right-0 top-1/2 -translate-y-1/2 min-w-fit px-2 py-[2px] inline-flex items-center align-middle text-sm leading-none bg-red-100 border border-red-500 rounded-sm">
+            Last Name is required.
+          </span>
+        }
+        @if (signupRequestForm.controls.lastName.hasError('minlength') || signupRequestForm.controls.lastName.hasError('maxlength')) {
+          <span class="absolute right-0 top-1/2 -translate-y-1/2 min-w-fit px-2 py-[2px] inline-flex items-center align-middle text-sm leading-none bg-red-100 border border-red-500 rounded-sm">
+            Last Name must be between {{ nameMinLength }} and {{ nameMaxLength }} characters.
+          </span>
+        }
+        @if (signupRequestForm.controls.lastName.hasError('pattern')) {
+          <span class="absolute right-0 top-1/2 -translate-y-1/2 min-w-fit px-2 py-[2px] inline-flex items-center align-middle text-sm leading-none bg-red-100 border border-red-500 rounded-sm">
+            Last Name can only contain letters, spaces, hyphens, and apostrophes.
+          </span>
+        }
+      }
+    </div>
+    <input class="w-full px-2 py-1 bg-cyan-100 focus:bg-cyan-50 border border-cyan-950 rounded-sm outline-none active:outline-none" [class.border-red-500]="signupRequestForm.controls.lastName.invalid && signupRequestForm.controls.lastName.touched" id="lastName" type="text" formControlName="lastName" />
+  </div>
+  <div class="w-full">
+      <div class="w-full relative">
+        <label class="font-bold text-lg text-left text-cyan-50" for="email">Email</label>
+        @if (signupRequestForm.controls.email.touched) {
+          @if (signupRequestForm.controls.email.hasError('email') || signupRequestForm.controls.email.hasError('required')) {
+            <span class="absolute right-0 top-1/2 -translate-y-1/2 min-w-fit px-2 py-[2px] inline-flex items-center align-middle text-sm leading-none bg-red-100 border border-red-500 rounded-sm">
+              Email is required.
+            </span>
+          }
+        }
+      </div>
+      <input class="w-full px-2 py-1 bg-cyan-100 focus:bg-cyan-50 border border-cyan-950 rounded-sm outline-none active:outline-none" [class.border-red-500]="signupRequestForm.controls.email.invalid && signupRequestForm.controls.email.touched" id="email" type="email" formControlName="email" />
+    </div>
+
+</form>

@@ -1,7 +1,15 @@
-<div class="w-2xl max-w-[90vw] h-90vh p-5 bg-black/30 border-cyan-600 rounded-lg">
-  <app-login-form />
-  <div class="w-full flex gap-0">
-    <button class="text-cyan-50 text-xl font-bold" [class.bg-cyan-400]="displayForm" [class.bg-mist-300]="!displayForm" (click)="showLogin()">Login</button>
-    <button class="text-cyan-50 text-xl font-bold" [class.bg-cyan-400]="!displayForm" [class.bg-mist-300]="displayForm" (click)="showSignup()">Sign Up</button>
+<div class="w-md max-w-[90vw] h-[75vh] max-h-800px min-h-500px flex flex-col justify-between bg-black/30 border-cyan-600 rounded-lg">
+  @if (displayForm() === "Login") {
+    <app-login-form />
+    <hr class="w-9/10 mx-auto text-cyan-700">
+    <div class="flex-grow text-cyan-50 text-lg text-center font-bold">Replace with OAuth2.0</div>
+  }
+  @if (displayForm() === "Signup") {
+    <app-signup-form />
+  }
+  <div class="w-full relative flex gap-0 bg-mist-400 rounded-b-lg">
+    <div class="absolute w-1/2 h-full bg-cyan-400 transition-all duration-200 top-0 left-0" [ngClass]="{'translate-x-0 rounded-bl-lg': displayForm()==='Login', 'translate-x-full rounded-br-lg': displayForm()==='Signup'}"></div>
+    <button class="z-1 w-full text-cyan-50 text-xl font-bold rounded-bl-lg cursor-pointer" (click)="showLogin()">Login</button>
+    <button class="z-1 w-full text-cyan-50 text-xl font-bold rounded-br-lg cursor-pointer" (click)="showSignup()">Sign Up</button>
   </div>
 </div>
