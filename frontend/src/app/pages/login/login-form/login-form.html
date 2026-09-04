@@ -3,7 +3,8 @@
     <div class="w-full relative">
       <label class="font-bold text-lg text-left text-cyan-50" for="email">Email</label>
       @if (loginRequestForm.controls.email.touched) {
-        @if (loginRequestForm.controls.email.hasError('email') || loginRequestForm.controls.email.hasError('required')) {
+        @if (loginRequestForm.controls.email.hasError('email')
+          || loginRequestForm.controls.email.hasError('required')) {
           <span class="absolute right-0 top-1/2 -translate-y-1/2 min-w-fit px-2 py-[2px] inline-flex items-center align-middle text-sm leading-none bg-red-100 border border-red-500 rounded-sm">
             Email is required.
           </span>
@@ -25,10 +26,10 @@
     </div>
     <div class="w-full flex gap-2 items-center justify-between">
       <input class="w-full px-2 py-1 bg-cyan-100 focus:bg-cyan-50 border border-cyan-950 rounded-sm outline-none active:outline-none" [class.border-red-500]="loginRequestForm.controls.password.invalid && loginRequestForm.controls.password.touched" id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password" />
-      <button class="text-cyan-50 align-middle cursor-pointer" type="button" (click)="togglePasswordVisibility()">
+      <button class="text-cyan-50 align-middle cursor-pointer" type="button" (pointerdown)="showPassword=true" (pointerup)="showPassword=false" (poindercancel)="showPassword=false" (pointerleave)="showPassword=false">
         <fa-icon [icon]="showPassword ? faEyeSlash : faEye"></fa-icon>
       </button>
     </div>
   </div>
-  <button class="w-28 px-2 py-1 text-cyan-800 bg-cyan-200 hover:bg-cyan-50 active:bg-cyan-50 border border-cyan-950 rounded-sm transition-all duration-150" id="login-submit" type="submit">Login</button>
+  <button class="w-28 px-2 py-1 justify-self-start text-cyan-800 bg-cyan-200 hover:bg-cyan-50 active:bg-cyan-50 border border-cyan-950 rounded-sm disabled:cursor-not-allowed disabled:bg-mist-300 transition-all duration-150" id="login-submit" type="submit" [disabled]="isSubmitting">Login</button>
 </form>
