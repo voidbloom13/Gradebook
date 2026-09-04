@@ -1,32 +1,10 @@
 CURRENT NEXT STEPS:
-- Double check Models and AppDbContext
-- Create placeholder Angular pages for /login, /dashboard
-- Create backend/Services/AuthenticationService.cs
-
-
-NG("/") -> GET("/api/auth/session") -> 200/401
-|- 200 -> NG("/dashboard")
-|- 401 -> NG("/login", note: login also handles signup)
-
-Fresh Instance:
-Angular loads /, GET /api/auth/session
- |
- V
-UseAuthentication(), no Auth Cookie, HttpContext.User = Anonymous, returns 401
- |
- V
-Angular routes to /login, validates inputs, HTTP POST /api/auth/login
- |
- V
-POST /api/auth/login validates against DB, creates Claims, SignInAsync(),
-Create Authentication Ticket, Create Cookie
- |
- V
-Angular loads /, GET /api/auth/session
- |
- V
-UseAuthentication(), validates Auth Cookie, rebuilds ClaimsPrincipal, 
-HttpContext.User populates, return 200
- |
- V
-Angular loads /dashboard
+- Create Sign Up page for new Students, route to /api/auth/signup
+- If User.IsDisabled, return Results.Forbid()
+- On Login, if !User.IsEmailVerified, route to /api/auth/verify-email
+- On Login and User.IsEmailVerified, if User.RequirePasswordChange, route to /api/auth/change-password
+  - Include "Forgot Password" link on change-password form, route to /api/auth/forgot-password
+    - change-password prompts for Old Password, New Password, and Confirm Password
+    - forgot-password prompts for First Name, Last Name, and Email Address. If information is correct, emails a code
+      to the user and prompts for the code. Once code is confirmed, prompts for New Password and Confirm Password
+- On Login, if User.IsEmailVerified && !User.RequirePasswordChange, route to /dashboard

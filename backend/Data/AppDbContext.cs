@@ -31,6 +31,9 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<User>()
             .HasIndex(u => u.Email)
             .IsUnique();
+        modelBuilder.Entity<User>()
+            .Property(u => u.RequirePasswordChange)
+            .HasDefaultValue(true);
 
         modelBuilder.Entity<Term>()
             .HasKey(t => new { t.TermSeason, t.TermYear });

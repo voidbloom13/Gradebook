@@ -41,6 +41,10 @@ public static class AuthenticationService
         {
             return Results.Unauthorized();
         }
+        if (user.IsDisabled)
+        {
+            return Results.Forbid();
+        }
 
         var passwordHasher = new PasswordHasherService();
         var verificationResult = passwordHasher.Verify(loginRequest.Password, user.PasswordHash!);
@@ -78,9 +82,9 @@ public static class AuthenticationService
         return Results.Ok();
     }
 
-    public static async Task<IResult> LogoutUserService(HttpContext context)
+    public static async Task LogoutUserService(HttpContext context)
     {
         await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        return Results.Ok();
+        return;
     }
 }

@@ -10,22 +10,47 @@ public static class AuthenticationEndpoints
     {
         app.MapGet("/api/auth/session", (HttpContext ctx) =>
         {
-            return AuthenticationService.ValidateSessionService(ctx);
+            var result = AuthenticationService.ValidateSessionService(ctx);
+            return result;
         });
 
         app.MapPost("/api/auth/login", (HttpContext ctx, AppDbContext db) =>
         {
-            return AuthenticationService.LoginUserService(ctx, db);
+            var result = AuthenticationService.LoginUserService(ctx, db);
+            return result;
         });
 
         app.MapPost("/api/auth/signup", (HttpContext ctx) =>
         {
-            return AuthenticationService.CreateNewStudentService(ctx);
+            var result = AuthenticationService.CreateNewStudentService(ctx);
+            return result;
         }); // admin routes will create new Teachers
         
         app.MapPost("/api/auth/logout", (HttpContext ctx) =>
         {
-            return AuthenticationService.LogoutUserService(ctx);
+            var result = AuthenticationService.LogoutUserService(ctx);
+            return result;
+        });
+
+        // TODO: Change password if User knows current password
+        app.MapPost("/api/auth/change-password", (HttpContext ctx) =>
+        {
+          return;
+        });
+
+        // TODO: Change password if User forgot current password,
+        // Authenticates with User.FirstName, User.LastName, and User.Email
+        // prior to setting new password
+        app.MapPost("/api/auth/forgot-password", (HttpContext ctx) =>
+        {
+          return;
+        });
+
+        // TODO: Verify password to ensure the User can reset password
+        // Send a 4-8 digit code to User.Email and ask to confirm code
+        app.MapPost("/api/auth/verify-email", (HttpContext ctx) =>
+        {
+          return;
         });
 
         return app;

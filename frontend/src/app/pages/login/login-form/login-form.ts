@@ -23,6 +23,9 @@ export class LoginForm {
   private authService = inject(AuthService);
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
+  // move password validators (other than required) to signup
+  // public passwordMinLength = 8;
+  // public passwordMaxLength = 128;
   public showPassword = false;
   public faEye = faEye;
   public faEyeSlash = faEyeSlash;
@@ -40,8 +43,8 @@ export class LoginForm {
       '',
       [
         Validators.required,
-        Validators.minLength(8),
-        Validators.maxLength(128),
+        // Validators.minLength(this.passwordMinLength),
+        // Validators.maxLength(this.passwordMaxLength),
       ]
     ]
   })
@@ -53,8 +56,9 @@ export class LoginForm {
   onSubmit(): void {
     this.isSubmitting  = true;
     // Create new LoginRequest object and POST /api/auth/login
-    this.loginRequestForm.markAllAsTouched;
+    this.loginRequestForm.markAllAsTouched();
     if (this.loginRequestForm.invalid) {
+      this.isSubmitting = false;
       return;
     }
 
