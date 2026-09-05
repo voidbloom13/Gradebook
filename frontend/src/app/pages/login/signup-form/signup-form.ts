@@ -21,6 +21,7 @@ export class SignupForm {
   public nameMinLength = 2;
   public nameMaxLength = 50;
   public showPassword = false;
+  public showConfirmPassword = false;
   public passwordMinLength = 8;
   public passwordMaxLength = 128;
   public faEye = faEye;

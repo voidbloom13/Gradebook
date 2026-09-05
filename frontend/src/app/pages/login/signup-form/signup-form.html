@@ -46,17 +46,66 @@
     <input class="w-full px-2 py-1 bg-cyan-100 focus:bg-cyan-50 border border-cyan-950 rounded-sm outline-none active:outline-none" [class.border-red-500]="signupRequestForm.controls.lastName.invalid && signupRequestForm.controls.lastName.touched" id="lastName" type="text" formControlName="lastName" />
   </div>
   <div class="w-full">
-      <div class="w-full relative">
-        <label class="font-bold text-lg text-left text-cyan-50" for="email">Email</label>
-        @if (signupRequestForm.controls.email.touched) {
-          @if (signupRequestForm.controls.email.hasError('email') || signupRequestForm.controls.email.hasError('required')) {
-            <span class="absolute right-0 top-1/2 -translate-y-1/2 min-w-fit px-2 py-[2px] inline-flex items-center align-middle text-sm leading-none bg-red-100 border border-red-500 rounded-sm">
-              Email is required.
-            </span>
-          }
+    <div class="w-full relative">
+      <label class="font-bold text-lg text-left text-cyan-50" for="email">Email</label>
+      @if (signupRequestForm.controls.email.touched) {
+        @if (signupRequestForm.controls.email.hasError('email') || signupRequestForm.controls.email.hasError('required')) {
+          <span class="absolute right-0 top-1/2 -translate-y-1/2 min-w-fit px-2 py-[2px] inline-flex items-center align-middle text-sm leading-none bg-red-100 border border-red-500 rounded-sm">
+            Email is required.
+          </span>
         }
-      </div>
-      <input class="w-full px-2 py-1 bg-cyan-100 focus:bg-cyan-50 border border-cyan-950 rounded-sm outline-none active:outline-none" [class.border-red-500]="signupRequestForm.controls.email.invalid && signupRequestForm.controls.email.touched" id="email" type="email" formControlName="email" />
+      }
     </div>
-
+    <input class="w-full px-2 py-1 bg-cyan-100 focus:bg-cyan-50 border border-cyan-950 rounded-sm outline-none active:outline-none" [class.border-red-500]="signupRequestForm.controls.email.invalid && signupRequestForm.controls.email.touched" id="email" type="email" formControlName="email" />
+  </div>
+  <div class="w-full">
+    <div class="w-full relative">
+      <label class="font-bold text-lg text-left text-cyan-50" for="password">Password</label>
+      @if (signupRequestForm.controls.password.touched) {
+        @if (signupRequestForm.controls.password.hasError('required')) {
+          <span class="absolute right-0 top-1/2 -translate-y-1/2 min-w-fit px-2 py-[2px] inline-flex items-center align-middle text-sm leading-none bg-red-100 border border-red-500 rounded-sm">Password is required.</span>
+        }
+        @if (signupRequestForm.controls.password.hasError('minlength') || signupRequestForm.controls.password.hasError('maxlength')) {
+          <span class="absolute right-0 top-1/2 -translate-y-1/2 min-w-fit px-2 py-[2px] inline-flex items-center align-middle text-sm leading-none bg-red-100 border border-red-500 rounded-sm">
+            Password must be between {{ passwordMinLength }} and {{ passwordMaxLength }} characters.
+          </span>
+        }
+      }
+    </div>
+    <div class="w-full flex gap-2 items-center justify-between">
+      <input class="w-full px-2 py-1 bg-cyan-100 focus:bg-cyan-50 rounded-sm outline-none active:outline-none" [class.border-red-500]="signupRequestForm.controls.password.invalid && signupRequestForm.controls.password.touched" id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password" />
+      <button class="text-cyan-50 align-middle cursor-pointer" type="button" (pointerdown)="showPassword=true" (pointerup)="showPassword=false" (pointercancel)="showPassword=false" (pointerleave)="showPassword=false">
+        <fa-icon [icon]="showPassword ? faEyeSlash : faEye"></fa-icon>
+      </button>
+    </div>
+  </div>
+  <div class="w-full">
+    <div class="w-full relative">
+      <label class="font-bold text-lg text-left text-cyan-50" for="confirmPassword">Confirm Password</label>
+      @if (signupRequestForm.controls.confirmPassword.touched) {
+        @if (signupRequestForm.controls.confirmPassword.hasError('required')) {
+          <span class="absolute right-0 top-1/2 -translate-y-1/2 min-w-fit px-2 py-[2px] inline-flex items-center align-middle text-sm leading-none bg-red-100 border border-red-500 rounded-sm">
+            Confirm Password to continue.
+          </span>
+        }
+        @if (signupRequestForm.controls.confirmPassword.hasError('minlength') || signupRequestForm.controls.confirmPassword.hasError('maxlength')) {
+          <span class="absolute right-0 top-1/2 -translate-y-1/2 min-w-fit px-2 py-[2px] inline-flex items-center align-middle text-sm leading-none bg-red-100 border border-red-500 rounded-sm">
+            Password must be between {{ passwordMinLength }} and {{ passwordMaxLength }} characters.
+          </span>
+        }
+        @if (signupRequestForm.controls.confirmPassword.hasError('mismatch')) {
+          <span class="absolute right-0 top-1/2 -translate-y-1/2 min-w-fit px-2 py-[2px] inline-flex items-center align-middle text-sm leading-none bg-red-100 border border-red-500 rounded-sm">
+            Passwords do not match.
+          </span>
+        }
+      }
+    </div>
+    <div class="w-full flex gap-2 items-center justify-between">
+      <input class="w-full px-2 py-1 bg-cyan-100 focus:bg-cyan-50 rounded-sm outline-none active:outline-none" [class.border-red-500]="signupRequestForm.controls.confirmPassword.invalid && signupRequestForm.controls.confirmPassword.touched" id="confirmPassword" [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirmPassword" />
+      <button class="text-cyan-50 align-middle cursor-pointer" type="button" (pointerdown)="showConfirmPassword=true" (pointerup)="showConfirmPassword=false" (pointercancel)="showConfirmPassword=false" (pointerleave)="showConfirmPassword=false">
+        <fa-icon [icon]="showConfirmPassword ? faEyeSlash : faEye"></fa-icon>
+      </button>
+    </div>
+  </div>
+  <button class="w-40 px-2 py-1 justify-self-start text-cyan-50 font-bold bg-cyan-400 hover:bg-cyan-300 active:bg-cyan-300 border border-cyan-950 rounded-sm disabled:cursor-not-allowed disabled:bg-mist-400 transition-all duration-200" id="signupSubmit" type="submit" [disabled]="signupRequestForm.invalid ">Create Account</button>
 </form>
