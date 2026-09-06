@@ -1,6 +1,4 @@
 CURRENT NEXT STEPS:
-- Create Sign Up page for new Students, route to /api/auth/signup
-- If User.IsDisabled, return Results.Forbid()
 - On Login, if !User.IsEmailVerified, route to /api/auth/verify-email
 - On Login and User.IsEmailVerified, if User.RequirePasswordChange, route to /api/auth/change-password
   - Include "Forgot Password" link on change-password form, route to /api/auth/forgot-password
@@ -8,3 +6,20 @@ CURRENT NEXT STEPS:
     - forgot-password prompts for First Name, Last Name, and Email Address. If information is correct, emails a code
       to the user and prompts for the code. Once code is confirmed, prompts for New Password and Confirm Password
 - On Login, if User.IsEmailVerified && !User.RequirePasswordChange, route to /dashboard
+
+
+Data Flow:
+- If HttpContext.User.Identity is Anonymous, /api/auth/login + /login
+- If !User.IsEmailVerified, /api/auth/verify-email + /verify-email
+- If User.IsEmailVerified && User.RequirePasswordChange, /api/auth/change-password + /change-password
+  - If user clicks forgot-password link, /api/auth/forgot-password + /forgot-password
+    - change-password requires oldPassword, newPassword, and confirmPassword
+    - forgot-password required email verification to enter newPassword and confirmPassword
+- If HttpContext.User.Identity && User.IsEmailVerified && !User.RequirePasswordChange, /dashboard
+
+Order of next steps:
+- update background image and tint for prettier UI/quick change
+- email verification, forced route if IsEmailVerified == false
+- change password, forced route if RequirePasswordChange == true, add button to Dashboard
+- forgot password, link on login-form and change-password-form, email verification to confirm user
+- OAuth2.0 (introduces whole new identity/onboarding concerns, potentially save for later)
