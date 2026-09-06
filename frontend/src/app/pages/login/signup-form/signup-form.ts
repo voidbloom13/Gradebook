@@ -4,12 +4,13 @@ import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { Alert } from '../../../components/alert/alert';
 import { AuthService } from '../../../services/auth';
 import { passwordMatchValidator } from '../../../services/custom-validators/passwordMatchValidator';
 import { SignupRequest } from '../../../services/models/signup-request';
 
 @Component({
-  imports: [ReactiveFormsModule, FontAwesomeModule],
+  imports: [ReactiveFormsModule, FontAwesomeModule, Alert],
   selector: 'app-signup-form',
   styleUrl: './signup-form.css',
   templateUrl: './signup-form.html',
@@ -18,6 +19,8 @@ export class SignupForm {
   private authService = inject(AuthService);
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
+  public alertType: 'error' | 'warning' | 'success' = 'error';
+  public alertMessage: string | null = null;
   public nameMinLength = 2;
   public nameMaxLength = 50;
   public showPassword = false;
@@ -83,8 +86,12 @@ export class SignupForm {
       return;
     }
 
-    const signupRequest = this.signupRequestForm.getRawValue() as SignupRequest;
-    signupRequest.email = signupRequest.email.toLowerCase();
+    const signupRequest: SignupRequest = {
+      firstName: this.signupRequestForm.controls.firstName.value!.trim(),
+      lastName: this.signupRequestForm.controls.lastName.value!.trim(),
+      email: this.signupRequestForm.controls.email.value!.trim().toLowerCase(),
+      password: this.signupRequestForm.controls.password.value!
+    }
 
     this.authService.signup(signupRequest).subscribe({
       next: () => {
@@ -93,9 +100,10 @@ export class SignupForm {
       },
       error: (e: HttpErrorResponse) => {
         console.log("Error submitting form.")
-        // Handle duplicate email entries, any other errors
         if (e.status === 409) {
-          console.log("Email already exists.");
+          this.alertType = "error";
+          this.alertMessage = "This email address already exists. Please login to continue.";
+          // show error alert
         }
         this.isSubmitting = false;
       }

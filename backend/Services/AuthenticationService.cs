@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +21,7 @@ public static class AuthenticationService
 
     public static async Task<IResult> LoginUserService(HttpContext context, AppDbContext db)
     {
-        // Create loginRequest object and verify credentials exist
+        // Creates and Validates loginRequest
         var loginRequest = await context.Request.ReadFromJsonAsync<LoginRequestDto>();
         if (
             loginRequest == null 
@@ -54,32 +53,53 @@ public static class AuthenticationService
         }
         
         // Create Claims, ClaimsIdentity, and ClaimsPrincipal from User object
-        var claims = new List<Claim>
-        {
-            new Claim(
-                ClaimTypes.Name,
-                $"{user.LastName}, {user.FirstName}"
-            ),
-            new Claim(
-                ClaimTypes.Email,
-                user.Email
-            ),
-            new Claim(
-                ClaimTypes.Role,
-                user.Role.ToString()
-            )
-        };
-        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-        // SignInAsync() and return Ok
-        await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+        await CreateClaims.CreateUserClaims(context, user);
         return Results.Ok();
     }
 
-    public static IResult CreateNewStudentService(HttpContext context)
+    public static async Task<IResult> CreateNewStudentService(HttpContext context, AppDbContext db)
     {
-        return Results.Ok();
+        // Creates and Validates signupRequest
+        var signupRequest = await context.Request.ReadFromJsonAsync<SignupRequestDto>();
+        if (
+            signupRequest == null
+            || string.IsNullOrWhiteSpace(signupRequest.FirstName)
+            || string.IsNullOrWhiteSpace(signupRequest.LastName)
+            || string.IsNullOrWhiteSpace(signupRequest.Email)
+            || string.IsNullOrWhiteSpace(signupRequest.Password)
+        )
+        {
+            return Results.BadRequest();
+        }
+
+        // Check if email exists
+        var emailExists = await db.Users.AnyAsync<User>(u => u.Email == signupRequest.Email);
+
+        if (emailExists)
+        {
+            return Results.Conflict();
+        }
+
+        // Creates the user object and adds entry to DB
+        var user = new Student
+        {
+            FirstName = signupRequest.FirstName,
+            LastName = signupRequest.LastName,
+            Email = signupRequest.Email,
+            IsEmailVerified = false,
+            RequirePasswordChange = false,
+            IsDisabled = false,
+            Role = Enums.Role.Student,
+            CreatedAt = DateTime.UtcNow
+        };
+        var passwordHasher = new PasswordHasherService();
+        user.PasswordHash = passwordHasher.Hash(signupRequest.Password);
+        db.Users.Add(user);
+        await db.SaveChangesAsync();
+
+        // Create Claims, ClaimsIdentity, and ClaimsPrincipal from User object
+        await CreateClaims.CreateUserClaims(context, user);
+        return Results.Created();
     }
 
     public static async Task LogoutUserService(HttpContext context)

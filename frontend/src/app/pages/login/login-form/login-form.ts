@@ -4,11 +4,12 @@ import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { Alert } from '../../../components/alert/alert';
 import { AuthService } from '../../../services/auth';
 import { LoginRequest } from '../../../services/models/login-request';
 
 @Component({
-  imports: [ReactiveFormsModule, FontAwesomeModule],
+  imports: [ReactiveFormsModule, FontAwesomeModule, Alert],
   selector: 'app-login-form',
   styleUrl: './login-form.css',
   templateUrl: './login-form.html',
@@ -20,9 +21,8 @@ export class LoginForm {
   private authService = inject(AuthService);
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
-  // move password validators (other than required) to signup
-  // public passwordMinLength = 8;
-  // public passwordMaxLength = 128;
+  public alertType: 'error' | 'warning' | 'success' = 'error';
+  public alertMessage: string | null = null;
   public showPassword = false;
   public faEye = faEye;
   public faEyeSlash = faEyeSlash;
@@ -40,8 +40,6 @@ export class LoginForm {
       '',
       [
         Validators.required,
-        // Validators.minLength(this.passwordMinLength),
-        // Validators.maxLength(this.passwordMaxLength),
       ]
     ]
   })
@@ -55,16 +53,23 @@ export class LoginForm {
       return;
     }
 
-    const loginRequest = this.loginRequestForm.getRawValue() as LoginRequest;
-    loginRequest.email = loginRequest.email.toLowerCase();
+    const loginRequest: LoginRequest = {
+      email: this.loginRequestForm.controls.email.value!.trim().toLowerCase(),
+      password: this.loginRequestForm.controls.password.value!
+    }
 
     this.authService.login(loginRequest).subscribe({
       next: () => {
         this.isSubmitting = false;
         this.router.navigate(['/dashboard']);
       },
-      error: () => {
+      error: (e: HttpErrorResponse) => {
         console.log("Error submitting form.");
+        if (e.status === 401) {
+          this.alertType = "error";
+          this.alertMessage = "Email or Password is incorrect.";
+          // show error alert
+        }
         this.isSubmitting = false;
       }
     });

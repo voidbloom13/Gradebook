@@ -32,6 +32,9 @@ public static class SeedingService
                 LastName = "Admin",
                 Email = "admin@gradebook.local",
                 PasswordHash = passwordHasher.Hash("@Admin123"),
+                IsEmailVerified = false,
+                RequirePasswordChange = true,
+                IsDisabled = false,
                 Role = Role.Admin,
                 CreatedAt = DateTime.UtcNow
             });

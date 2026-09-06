@@ -20,9 +20,9 @@ public static class AuthenticationEndpoints
             return result;
         });
 
-        app.MapPost("/api/auth/signup", (HttpContext ctx) =>
+        app.MapPost("/api/auth/signup", (HttpContext ctx, AppDbContext db) =>
         {
-            var result = AuthenticationService.CreateNewStudentService(ctx);
+            var result = AuthenticationService.CreateNewStudentService(ctx, db);
             return result;
         }); // admin routes will create new Teachers
         

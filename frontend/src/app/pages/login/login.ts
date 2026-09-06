@@ -11,7 +11,7 @@ import { SignupForm } from "./signup-form/signup-form";
 })
 
 export class Login {
-  public displayForm = signal<string>("Login");
+  public displayForm = signal<"Login" | "Signup">("Login");
   showLogin(): void {
     this.displayForm.set("Login");
   }
