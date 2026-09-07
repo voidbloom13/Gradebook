@@ -14,4 +14,5 @@ public abstract class User
     public bool IsDisabled { get; set; }
     public Role Role { get; set; }
     public DateTime CreatedAt { get; set; }
+    public ICollection<EmailVerificationCode> EmailVerificationCodes { get; set; } = [];
 }

@@ -14,15 +14,15 @@ public static class AuthenticationEndpoints
             return result;
         });
 
-        app.MapPost("/api/auth/login", (HttpContext ctx, AppDbContext db) =>
+        app.MapPost("/api/auth/login", async (HttpContext ctx, AppDbContext db) =>
         {
-            var result = AuthenticationService.LoginUserService(ctx, db);
+            var result = await AuthenticationService.LoginUserService(ctx, db);
             return result;
         });
 
-        app.MapPost("/api/auth/signup", (HttpContext ctx, AppDbContext db) =>
+        app.MapPost("/api/auth/signup", async (HttpContext ctx, AppDbContext db, EmailVerificationService emailVerificationService) =>
         {
-            var result = AuthenticationService.CreateNewStudentService(ctx, db);
+            var result = await AuthenticationService.CreateNewStudentService(ctx, db, emailVerificationService);
             return result;
         }); // admin routes will create new Teachers
         

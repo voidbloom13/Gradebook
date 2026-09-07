@@ -94,8 +94,9 @@ export class SignupForm {
     }
 
     this.authService.signup(signupRequest).subscribe({
-      next: () => {
+      next: (response: any) => {
         this.isSubmitting = false;
+        console.log(response);
         this.router.navigate(['/dashboard'])
       },
       error: (e: HttpErrorResponse) => {

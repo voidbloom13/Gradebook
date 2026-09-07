@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GradebookApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260904061407_FixIsDisabledFieldName")]
-    partial class FixIsDisabledFieldName
+    [Migration("20260907030216_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -213,9 +213,7 @@ namespace GradebookApi.Migrations
                         .HasColumnType("text");
 
                     b.Property<bool>("RequirePasswordChange")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true);
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Role")
                         .IsRequired()

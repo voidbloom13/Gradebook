@@ -117,6 +117,35 @@ namespace GradebookApi.Migrations
                     b.ToTable("Courses");
                 });
 
+            modelBuilder.Entity("Backend.Models.EmailVerificationCode", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CodeHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("EmailVerificationCodes");
+                });
+
             modelBuilder.Entity("Backend.Models.Enrollment", b =>
                 {
                     b.Property<Guid>("StudentId")
@@ -210,9 +239,7 @@ namespace GradebookApi.Migrations
                         .HasColumnType("text");
 
                     b.Property<bool>("RequirePasswordChange")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true);
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Role")
                         .IsRequired()
@@ -298,6 +325,17 @@ namespace GradebookApi.Migrations
                     b.Navigation("Term");
                 });
 
+            modelBuilder.Entity("Backend.Models.EmailVerificationCode", b =>
+                {
+                    b.HasOne("Backend.Models.User", "User")
+                        .WithMany("EmailVerificationCodes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Backend.Models.Enrollment", b =>
                 {
                     b.HasOne("Backend.Models.Course", "Course")
@@ -358,6 +396,11 @@ namespace GradebookApi.Migrations
             modelBuilder.Entity("Backend.Models.Term", b =>
                 {
                     b.Navigation("Courses");
+                });
+
+            modelBuilder.Entity("Backend.Models.User", b =>
+                {
+                    b.Navigation("EmailVerificationCodes");
                 });
 
             modelBuilder.Entity("Backend.Models.Student", b =>

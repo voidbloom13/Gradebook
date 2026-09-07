@@ -13,7 +13,7 @@ var connectionString =
     );
 
 builder.Services.AddSingleton<IPasswordHasher, PasswordHasherService>();
-
+builder.Services.AddScoped<EmailVerificationService>();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString)  
 );

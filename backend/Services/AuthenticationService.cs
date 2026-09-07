@@ -13,10 +13,7 @@ public static class AuthenticationService
     {
         if (!context.User.Identity?.IsAuthenticated ?? true)
             return Results.Unauthorized();
-        return Results.Ok(new
-        {
-            Name = context.User.Identity?.Name
-        });
+        return Results.Ok();
     }
 
     public static async Task<IResult> LoginUserService(HttpContext context, AppDbContext db)
@@ -57,7 +54,7 @@ public static class AuthenticationService
         return Results.Ok();
     }
 
-    public static async Task<IResult> CreateNewStudentService(HttpContext context, AppDbContext db)
+    public static async Task<IResult> CreateNewStudentService(HttpContext context, AppDbContext db, EmailVerificationService emailVerificationService)
     {
         // Creates and Validates signupRequest
         var signupRequest = await context.Request.ReadFromJsonAsync<SignupRequestDto>();
@@ -97,9 +94,16 @@ public static class AuthenticationService
         db.Users.Add(user);
         await db.SaveChangesAsync();
 
-        // Create Claims, ClaimsIdentity, and ClaimsPrincipal from User object
+        // Create Claims, ClaimsIdentity, and ClaimsPrincipal from User object, Email verification code.
         await CreateClaims.CreateUserClaims(context, user);
-        return Results.Created();
+        var verificationCode = await emailVerificationService.GenerateCode(user);
+
+
+        return Results.Created("/api/auth/signup",new
+        {
+            user = user.Id,
+            verificationCode
+        });
     }
 
     public static async Task LogoutUserService(HttpContext context)

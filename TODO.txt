@@ -1,13 +1,3 @@
-CURRENT NEXT STEPS:
-- On Login, if !User.IsEmailVerified, route to /api/auth/verify-email
-- On Login and User.IsEmailVerified, if User.RequirePasswordChange, route to /api/auth/change-password
-  - Include "Forgot Password" link on change-password form, route to /api/auth/forgot-password
-    - change-password prompts for Old Password, New Password, and Confirm Password
-    - forgot-password prompts for First Name, Last Name, and Email Address. If information is correct, emails a code
-      to the user and prompts for the code. Once code is confirmed, prompts for New Password and Confirm Password
-- On Login, if User.IsEmailVerified && !User.RequirePasswordChange, route to /dashboard
-
-
 Data Flow:
 - If HttpContext.User.Identity is Anonymous, /api/auth/login + /login
 - If !User.IsEmailVerified, /api/auth/verify-email + /verify-email
@@ -23,3 +13,14 @@ Order of next steps:
 - change password, forced route if RequirePasswordChange == true, add button to Dashboard
 - forgot password, link on login-form and change-password-form, email verification to confirm user
 - OAuth2.0 (introduces whole new identity/onboarding concerns, potentially save for later)
+
+
+
+CURRENTLY ON STEP 11 FOR IMPLEMENTING EmailVerificationService
+Current Progress: I now generate a Verification Code on signup and save the HashedCode to the EmailVerificationCodes table.
+Next: 
+- /api/auth/resend-email-verification-code (needs to expire all other email codes for that user)
+- /api/auth/verify-email (needs to accept a string to verify code. If incorrect, must expire and re-issue code)
+  - need /dashboard/verify-email (has field for code + resend code link) (alert toast for incorrect code, code resent, and success) (page waits for alert to end, then erases form or re-routes to /dashboard)
+Key question: Once user is logged in, how do I route the user appropriately for verifying email?
+- Do I just send the email and prompt the user to verify the code immediately?
