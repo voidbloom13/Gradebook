@@ -8,5 +8,6 @@ public class EmailVerificationCode
     public DateTime CreatedAt { get; set; }
     public DateTime ExpiresAt { get; set; }
     public bool IsUsed { get; set; }
+    public int Attempts { get; set; }
     public User User { get; set; } = null!;
 }

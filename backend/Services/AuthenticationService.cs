@@ -4,19 +4,35 @@ using Microsoft.EntityFrameworkCore;
 using Backend.Data;
 using Backend.Dtos;
 using Backend.Models;
+using System.Security.Claims;
 
 namespace Backend.Services;
 
 public static class AuthenticationService
 {
-    public static IResult ValidateSessionService(HttpContext context)
+    public static async Task<IResult> ValidateSession(HttpContext context, AppDbContext db)
     {
-        if (!context.User.Identity?.IsAuthenticated ?? true)
+        var userIdClaim = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (
+            !context.User.Identity?.IsAuthenticated ?? true
+            || userIdClaim == null)
+        {
             return Results.Unauthorized();
-        return Results.Ok();
+        }
+        var user = await db.Users.FirstOrDefaultAsync<User>(u => u.Id.ToString() == userIdClaim);
+        if (user == null)
+        {
+            return Results.Unauthorized();
+        }
+
+        return Results.Ok(new
+        {
+            isEmailVerified = user.IsEmailVerified,
+            requirePasswordChange = user.RequirePasswordChange
+        });
     }
 
-    public static async Task<IResult> LoginUserService(HttpContext context, AppDbContext db)
+    public static async Task<IResult> Login(HttpContext context, AppDbContext db)
     {
         // Creates and Validates loginRequest
         var loginRequest = await context.Request.ReadFromJsonAsync<LoginRequestDto>();
@@ -54,7 +70,7 @@ public static class AuthenticationService
         return Results.Ok();
     }
 
-    public static async Task<IResult> CreateNewStudentService(HttpContext context, AppDbContext db, EmailVerificationService emailVerificationService)
+    public static async Task<IResult> SignupStudent(HttpContext context, AppDbContext db, EmailVerificationService emailVerificationService)
     {
         // Creates and Validates signupRequest
         var signupRequest = await context.Request.ReadFromJsonAsync<SignupRequestDto>();
@@ -96,19 +112,87 @@ public static class AuthenticationService
 
         // Create Claims, ClaimsIdentity, and ClaimsPrincipal from User object, Email verification code.
         await CreateClaims.CreateUserClaims(context, user);
-        var verificationCode = await emailVerificationService.GenerateCode(user);
 
-
-        return Results.Created("/api/auth/signup",new
-        {
-            user = user.Id,
-            verificationCode
-        });
+        return Results.Created();
     }
 
-    public static async Task LogoutUserService(HttpContext context)
+    public static async Task Logout(HttpContext context)
     {
         await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return;
+    }
+
+    public static async Task ChangePassword(HttpContext context)
+    {
+        return;
+    }
+
+    public static async Task ForgotPassword(HttpContext context)
+    {
+        return;
+    }
+
+    public static async Task<IResult> VerifyEmail(HttpContext context, AppDbContext db, EmailVerificationService emailVerificationService)
+    {
+        var userIdClaim = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userIdClaim == null)
+        {
+            return Results.Unauthorized();
+        }
+
+        var request = await context.Request.ReadFromJsonAsync<EmailVerificationCodeDto>();
+        if (
+            request == null
+            || string.IsNullOrWhiteSpace(request.code)
+            || request.code.Length != 6
+            || !request.code.All(char.IsDigit)
+        )
+        {
+            return Results.BadRequest(new
+            {
+                message = "Code is required and must be 6 digits."
+            });
+        }
+        var code = request.code;
+
+        var user = await db.Users.FirstOrDefaultAsync<User>(u => u.Id.ToString() == userIdClaim);
+        if (user == null)
+        {
+            return Results.Unauthorized();
+        }
+
+        if (user.IsEmailVerified)
+        {
+            return Results.Ok(new
+            {
+                message = "Email is already verified"
+            });
+        }
+        var emailVerificationSuccessful = await emailVerificationService.VerifyCode(code, user);
+
+        if (!emailVerificationSuccessful)
+        {
+            return Results.BadRequest(new
+            {
+                message = "Unable to verify email."
+            });
+        }
+
+        user.IsEmailVerified = emailVerificationSuccessful;
+        db.Users.Update(user);
+        return Results.Ok(new
+        {
+            message = "Email verification successful."
+        });
+    }
+    
+    public static async Task<IResult> ResendEmailVerificationCode(HttpContext context, AppDbContext db, EmailVerificationService emailVerificationService)
+    {
+        // marks all other codes with current UserId as IsUsed = true,
+        // generates new code
+        return Results.Ok(new
+        {
+            message = "New Email verification code generated successfully."
+        });
     }
 }

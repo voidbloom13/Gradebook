@@ -8,13 +8,16 @@ Data Flow:
 - If HttpContext.User.Identity && User.IsEmailVerified && !User.RequirePasswordChange, /dashboard
 
 Order of next steps:
-- update background image and tint for prettier UI/quick change
 - email verification, forced route if IsEmailVerified == false
 - change password, forced route if RequirePasswordChange == true, add button to Dashboard
 - forgot password, link on login-form and change-password-form, email verification to confirm user
 - OAuth2.0 (introduces whole new identity/onboarding concerns, potentially save for later)
 
-
+----- NEXT STEPS -----
+Update angular routing. Successful login should always route to /dashboard. Dashboard should check and route to /user/verify-email or /user/change-password if needed.
+GET /api/auth/send-email-verification-code should be called when /user/verify-email is loaded (Called onInit)
+GET /api/auth/send-email-verification-code expires any old codes, generates a new code, sends the email, loads the webpage
+POST /api/auth/verify-email checks the submitted code and performs necessary checks. (Route Completed?, Called onSubmit)
 
 CURRENTLY ON STEP 11 FOR IMPLEMENTING EmailVerificationService
 Current Progress: I now generate a Verification Code on signup and save the HashedCode to the EmailVerificationCodes table.

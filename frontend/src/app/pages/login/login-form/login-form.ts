@@ -44,6 +44,10 @@ export class LoginForm {
     ]
   })
 
+  public forgotPassword() {
+    this.router.navigate(['/user/forgot-password']);
+  }
+
   onSubmit(): void {
     this.isSubmitting = true;
     // Create new LoginRequest object and POST /api/auth/login
@@ -61,7 +65,8 @@ export class LoginForm {
     this.authService.login(loginRequest).subscribe({
       next: () => {
         this.isSubmitting = false;
-        this.router.navigate(['/dashboard']);
+
+        this.router.navigate(['/']);
       },
       error: (e: HttpErrorResponse) => {
         console.log("Error submitting form.");
@@ -69,6 +74,10 @@ export class LoginForm {
           this.alertType = "error";
           this.alertMessage = "Email or Password is incorrect.";
           // show error alert
+        }
+        if (e.status === 403) {
+          this.alertType = "error";
+          this.alertMessage = "Error: User is forbidden.";
         }
         this.isSubmitting = false;
       }

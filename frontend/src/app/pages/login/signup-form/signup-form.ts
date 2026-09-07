@@ -96,8 +96,7 @@ export class SignupForm {
     this.authService.signup(signupRequest).subscribe({
       next: (response: any) => {
         this.isSubmitting = false;
-        console.log(response);
-        this.router.navigate(['/dashboard'])
+        this.router.navigate(['/session-check', response])
       },
       error: (e: HttpErrorResponse) => {
         console.log("Error submitting form.")

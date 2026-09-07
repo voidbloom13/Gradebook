@@ -16,13 +16,20 @@ export class SessionCheck {
 
   ngOnInit(): void {
     this.authService.checkSession().subscribe({
-      next: () => {
-        this.router.navigate(['/dashboard']);
+      next: (response: any) => {
+        console.log(response);
+        if (!response.isEmailVerified) {
+          this.router.navigate(['/user/verify-email']);
+        } else if (response.requirePasswordChange) {
+          this.router.navigate(['/user/change-password']);
+        } else this.router.navigate(['/dashboard']);
       },
       error: (e: HttpErrorResponse) => {
         if (e.status === 401) {
           this.router.navigate(['/login']);
         }
+        console.log(e.message);
+        this.router.navigate(['/login']);
       }
     })
   }
