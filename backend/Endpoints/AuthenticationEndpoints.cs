@@ -48,23 +48,5 @@ public static class AuthenticationEndpoints
             return result;
         })
         .RequireAuthorization();
-
-        // TODO: Change password if User knows current password
-        app.MapPost("/api/auth/change-password", async (HttpContext ctx) =>
-        {
-            return;
-        })
-        .RequireAuthorization();
-
-        // TODO: Change password if User forgot current password,
-        // Authenticates with User.FirstName, User.LastName, and User.Email
-        // prior to setting new password
-        app.MapPost("/api/auth/forgot-password", async (HttpContext ctx) =>
-        {
-            return;
-        })
-        .RequireAuthorization();
-
-        return app;
     }
 }

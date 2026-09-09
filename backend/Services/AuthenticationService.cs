@@ -194,14 +194,4 @@ public static class AuthenticationService
             message = "Email verification successful."
         });
     }   
-
-    public static async Task<IResult> ChangePasswordAsync(HttpContext context)
-    {
-        return Results.Ok();
-    }
-
-    public static async Task<IResult> ForgotPasswordAsync(HttpContext context)
-    {
-        return Results.Ok();
-    }
 }

@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LoginRequest } from './models/login-request';
 import { SignupRequest } from './models/signup-request';
+import { VerificationCode } from './models/verification-code';
 import { environment } from '../environments/environment';
 
 @Injectable({
@@ -39,6 +40,22 @@ export class AuthService {
             `${environment.apiUrl}/api/auth/logout`,
             {},
             { withCredentials: true }
+        );
+    }
+
+    generateEmailVerificationCode() {
+        return this.http.post(
+            `${environment.apiUrl}/api/auth/generate-email-verification-code`,
+            {},
+            { withCredentials: true }
+        );
+    }
+
+    verifyEmail(verificationCode: VerificationCode) {
+        return this.http.post(
+            `${environment.apiUrl}/api/auth/verify-email`,
+            verificationCode,
+            { withCredentials: true}
         );
     }
 }

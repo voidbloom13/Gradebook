@@ -5,6 +5,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Alert } from '../../../components/alert/alert';
 import { AuthService } from '../../../services/auth';
+import { UserService } from '../../../services/user';
 
 @Component({
   imports: [ReactiveFormsModule, FontAwesomeModule, Alert],
@@ -15,15 +16,53 @@ import { AuthService } from '../../../services/auth';
 
 export class VerifyEmail {
   private authService = inject(AuthService);
+  private userService = inject(UserService);
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
-  public userEmail: string = "placeholder@place.holder";
+  public userEmail: string | null = null;
   public faArrowLeft = faArrowLeft;
 
-  generateCode() {
-    alert("Calling /api/auth/generate-email-verification-code");
+  onInit() {
+    this.userService.getEmail().subscribe({
+      next: (response: any) => {
+        this.userEmail = response.emailAddress;
+      }
+    })
   }
 
+  generateCode() {
+    this.authService.generateEmailVerificationCode().subscribe({
+      next: () => {
+        console.log("Code generated successfully.");
+      },
+      error: () => {
+        console.log("Unable to generate new code.");
+      }
+    });
+  }
+
+  changeEmail() {
+    this.userService.changeEmail().subscribe({
+      next: () => {
+        console.log("Email updated successfully.");
+      },
+      error: () => {
+        console.log("Unable to change email.");
+      }
+    });
+  }
+
+  onSubmit() {
+    this.authService.verifyEmail().subscribe({
+      next: () => {
+        console.log("Email verified successfully.");
+      },
+      error: () => {
+        console.log("Unable to verify email.");
+      }
+    });
+  }
+  
   logout(): void {
     this.authService.logout().subscribe({
       next: () => {
