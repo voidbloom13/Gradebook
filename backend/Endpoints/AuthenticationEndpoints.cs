@@ -10,33 +10,51 @@ public static class AuthenticationEndpoints
     {
         app.MapGet("/api/auth/session", async (HttpContext ctx, AppDbContext db) =>
         {
-            var result = await AuthenticationService.ValidateSession(ctx, db);
+            var result = await AuthenticationService.ValidateSessionAsync(ctx, db);
             return result;
         });
 
         app.MapPost("/api/auth/login", async (HttpContext ctx, AppDbContext db) =>
         {
-            var result = await AuthenticationService.Login(ctx, db);
+            var result = await AuthenticationService.LoginAsync(ctx, db);
             return result;
         });
 
         app.MapPost("/api/auth/signup", async (HttpContext ctx, AppDbContext db, EmailVerificationService emailVerificationService) =>
         {
-            var result = await AuthenticationService.SignupStudent(ctx, db, emailVerificationService);
+            var result = await AuthenticationService.SignupStudentAsync(ctx, db, emailVerificationService);
             return result;
         }); // admin routes will create new Teachers
         
         app.MapPost("/api/auth/logout", async (HttpContext ctx) =>
         {
-            var result = AuthenticationService.Logout(ctx);
+            var result = AuthenticationService.LogoutAsync(ctx);
             return result;
-        });
+        })
+        .RequireAuthorization();
+
+        app.MapPost("/api/auth/generate-email-verification-code", async (HttpContext ctx, AppDbContext db, EmailVerificationService emailVerificationService) =>
+        {
+            var result = await AuthenticationService.GenerateEmailVerificationCodeAsync(ctx, db, emailVerificationService);
+            return result;
+        })
+        .RequireAuthorization();
+
+        // TODO: Verify password to ensure the User can reset password
+        // Send a 4-8 digit code to User.Email and ask to confirm code
+        app.MapPost("/api/auth/verify-email", async (HttpContext ctx, AppDbContext db, EmailVerificationService emailVerificationService) =>
+        {
+            var result = await AuthenticationService.VerifyEmailVerificationCodeAsync(ctx, db, emailVerificationService);
+            return result;
+        })
+        .RequireAuthorization();
 
         // TODO: Change password if User knows current password
         app.MapPost("/api/auth/change-password", async (HttpContext ctx) =>
         {
             return;
-        });
+        })
+        .RequireAuthorization();
 
         // TODO: Change password if User forgot current password,
         // Authenticates with User.FirstName, User.LastName, and User.Email
@@ -44,22 +62,8 @@ public static class AuthenticationEndpoints
         app.MapPost("/api/auth/forgot-password", async (HttpContext ctx) =>
         {
             return;
-        });
-
-        // TODO: Verify password to ensure the User can reset password
-        // Send a 4-8 digit code to User.Email and ask to confirm code
-        app.MapPost("/api/auth/verify-email", async (HttpContext ctx, AppDbContext db, EmailVerificationService emailVerificationService) =>
-        {
-            var result = await AuthenticationService.VerifyEmail(ctx, db, emailVerificationService);
-            return result;
         })
         .RequireAuthorization();
-
-        app.MapGet("/api/auth/resend-email-verification-code", async (HttpContext ctx, AppDbContext db, EmailVerificationService emailVerificationService) =>
-        {
-            var result = await AuthenticationService.ResendEmailVerificationCode(ctx, db, emailVerificationService);
-            return result;
-        });
 
         return app;
     }

@@ -15,7 +15,7 @@ public class EmailVerificationService
         _hasher = hasher;
     }
 
-    public async Task<string> GenerateCode(User user)
+    public async Task<string> GenerateCodeAsync(User user)
     {
         // pass dbContext and hasher service here
         var code = RandomNumberGenerator
@@ -37,13 +37,13 @@ public class EmailVerificationService
         return code;
     }
 
-    public async Task<bool> VerifyCode(string code, User user)
+    public async Task<bool> VerifyCodeAsync(string code, User user)
     {
         var verificationCode = await _dbContext.EmailVerificationCodes
             .Where(c =>
                 c.UserId == user.Id
                 && !c.IsUsed
-                && c.Attempts < 3
+                && c.FailedAttempts < 5
                 && c.ExpiresAt > DateTime.UtcNow)
             .OrderByDescending(c => c.CreatedAt)
             .FirstOrDefaultAsync();
@@ -52,13 +52,14 @@ public class EmailVerificationService
         {
             return false;
         }
-        
+
         var isVerified = _hasher.Verify(code, verificationCode.CodeHash);
+        user.IsEmailVerified = isVerified;
         if (!isVerified)
         {
-            verificationCode.Attempts++;
-            _dbContext.Update(verificationCode);
+            verificationCode.FailedAttempts++;
         }
+        _dbContext.Update(user, verificationCode);
         return isVerified;
     }
 }

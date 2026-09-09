@@ -10,16 +10,16 @@ namespace Backend.Services;
 
 public static class AuthenticationService
 {
-    public static async Task<IResult> ValidateSession(HttpContext context, AppDbContext db)
+    public static async Task<IResult> ValidateSessionAsync(HttpContext context, AppDbContext db)
     {
         var userIdClaim = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (
-            !context.User.Identity?.IsAuthenticated ?? true
-            || userIdClaim == null)
+            context.User.Identity?.IsAuthenticated != true
+            || !Guid.TryParse(userIdClaim, out var userId))
         {
             return Results.Unauthorized();
         }
-        var user = await db.Users.FirstOrDefaultAsync<User>(u => u.Id.ToString() == userIdClaim);
+        var user = await db.Users.FirstOrDefaultAsync<User>(u => u.Id == userId);
         if (user == null)
         {
             return Results.Unauthorized();
@@ -32,7 +32,7 @@ public static class AuthenticationService
         });
     }
 
-    public static async Task<IResult> Login(HttpContext context, AppDbContext db)
+    public static async Task<IResult> LoginAsync(HttpContext context, AppDbContext db)
     {
         // Creates and Validates loginRequest
         var loginRequest = await context.Request.ReadFromJsonAsync<LoginRequestDto>();
@@ -70,7 +70,7 @@ public static class AuthenticationService
         return Results.Ok();
     }
 
-    public static async Task<IResult> SignupStudent(HttpContext context, AppDbContext db, EmailVerificationService emailVerificationService)
+    public static async Task<IResult> SignupStudentAsync(HttpContext context, AppDbContext db, EmailVerificationService emailVerificationService)
     {
         // Creates and Validates signupRequest
         var signupRequest = await context.Request.ReadFromJsonAsync<SignupRequestDto>();
@@ -112,32 +112,57 @@ public static class AuthenticationService
 
         // Create Claims, ClaimsIdentity, and ClaimsPrincipal from User object, Email verification code.
         await CreateClaims.CreateUserClaims(context, user);
+        emailVerificationService.GenerateCodeAsync(user);
 
         return Results.Created();
     }
 
-    public static async Task Logout(HttpContext context)
+    public static async Task<IResult> LogoutAsync(HttpContext context)
     {
         await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        return;
+        return Results.Ok();
     }
 
-    public static async Task ChangePassword(HttpContext context)
-    {
-        return;
-    }
-
-    public static async Task ForgotPassword(HttpContext context)
-    {
-        return;
-    }
-
-    public static async Task<IResult> VerifyEmail(HttpContext context, AppDbContext db, EmailVerificationService emailVerificationService)
+    public static async Task<IResult> GenerateEmailVerificationCodeAsync(HttpContext context, AppDbContext db, EmailVerificationService emailVerificationService)
     {
         var userIdClaim = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userIdClaim == null)
+        if (!Guid.TryParse(userIdClaim, out var userId))
         {
             return Results.Unauthorized();
+        }
+        var user = await db.Users.FirstOrDefaultAsync<User>(u => u.Id == userId);
+        if (user == null)
+        {
+            return Results.Unauthorized();
+        }
+
+        emailVerificationService.GenerateCodeAsync(user);
+
+        return Results.Ok(new
+        {
+            message = "New Email verification code generated successfully."
+        });
+    }
+
+    public static async Task<IResult> VerifyEmailVerificationCodeAsync(HttpContext context, AppDbContext db, EmailVerificationService emailVerificationService)
+    {
+        var userIdClaim = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!Guid.TryParse(userIdClaim, out var userId))
+        {
+            return Results.Unauthorized();
+        }
+        var user = await db.Users.FirstOrDefaultAsync<User>(u => u.Id == userId);
+        if (user == null)
+        {
+            return Results.Unauthorized();
+        }
+
+        if (user.IsEmailVerified)
+        {
+            return Results.Ok(new
+            {
+                message = "Email is already verified"
+            });
         }
 
         var request = await context.Request.ReadFromJsonAsync<EmailVerificationCodeDto>();
@@ -155,21 +180,7 @@ public static class AuthenticationService
         }
         var code = request.code;
 
-        var user = await db.Users.FirstOrDefaultAsync<User>(u => u.Id.ToString() == userIdClaim);
-        if (user == null)
-        {
-            return Results.Unauthorized();
-        }
-
-        if (user.IsEmailVerified)
-        {
-            return Results.Ok(new
-            {
-                message = "Email is already verified"
-            });
-        }
-        var emailVerificationSuccessful = await emailVerificationService.VerifyCode(code, user);
-
+        var emailVerificationSuccessful = await emailVerificationService.VerifyCodeAsync(code, user);
         if (!emailVerificationSuccessful)
         {
             return Results.BadRequest(new
@@ -177,22 +188,19 @@ public static class AuthenticationService
                 message = "Unable to verify email."
             });
         }
-
-        user.IsEmailVerified = emailVerificationSuccessful;
-        db.Users.Update(user);
         return Results.Ok(new
         {
             message = "Email verification successful."
         });
-    }
-    
-    public static async Task<IResult> ResendEmailVerificationCode(HttpContext context, AppDbContext db, EmailVerificationService emailVerificationService)
+    }   
+
+    public static async Task<IResult> ChangePasswordAsync(HttpContext context)
     {
-        // marks all other codes with current UserId as IsUsed = true,
-        // generates new code
-        return Results.Ok(new
-        {
-            message = "New Email verification code generated successfully."
-        });
+        return Results.Ok();
+    }
+
+    public static async Task<IResult> ForgotPasswordAsync(HttpContext context)
+    {
+        return Results.Ok();
     }
 }
