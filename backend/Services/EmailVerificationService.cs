@@ -59,7 +59,8 @@ public class EmailVerificationService
         {
             verificationCode.FailedAttempts++;
         }
-        _dbContext.Update(user, verificationCode);
+        _dbContext.Update(user);
+        _dbContext.Update(verificationCode);
         return isVerified;
     }
 }

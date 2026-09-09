@@ -27,6 +27,7 @@ public static class AuthenticationService
 
         return Results.Ok(new
         {
+            name = user.FirstName + " " + user.LastName,
             isEmailVerified = user.IsEmailVerified,
             requirePasswordChange = user.RequirePasswordChange
         });
@@ -112,7 +113,7 @@ public static class AuthenticationService
 
         // Create Claims, ClaimsIdentity, and ClaimsPrincipal from User object, Email verification code.
         await CreateClaims.CreateUserClaims(context, user);
-        emailVerificationService.GenerateCodeAsync(user);
+        await emailVerificationService.GenerateCodeAsync(user);
 
         return Results.Created();
     }
@@ -136,7 +137,7 @@ public static class AuthenticationService
             return Results.Unauthorized();
         }
 
-        emailVerificationService.GenerateCodeAsync(user);
+        await emailVerificationService.GenerateCodeAsync(user);
 
         return Results.Ok(new
         {

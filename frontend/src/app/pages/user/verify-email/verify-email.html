@@ -1,1 +1,18 @@
-<p>verify-email works!</p>
+<div class="w-xl max-w-[90vw] max-h-[90vh] min-h-[60vh] flex flex-col justify-evenly items-center bg-black/60 border border-mist-400/40 rounded-lg shadow-black/50 shadow-md">
+    <h1 class="text-center text-3xl text-cyan-50 font-bold">Verify Your Email</h1>
+    <div class="w-full flex flex-col justify-center items-center gap-2">
+    <p class="text-cyan-50">We've sent a 6-digit code to <strong class="font-bold">{{userEmail}}</strong></p>
+    <p class="text-cyan-50">Please enter the code below to verify your email.</p>
+    </div>
+    <form></form>
+    <p class="text-cyan-50">Didn't get the code? 
+        <a class="text-cyan-200/85 font-bold cursor-pointer" (click)="generateCode()">Resend Code</a>
+    </p>
+    <div class="w-full flex flex-col justify-center items-center gap-4">
+        <hr class="w-9/10 text-mist-300/30" />
+        <a class="text-cyan-100/40 cursor-pointer" (click)="logout()">
+            <fa-icon [icon]="faArrowLeft"></fa-icon>
+            Back to login
+        </a>
+    </div>
+</div>
