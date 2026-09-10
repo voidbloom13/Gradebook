@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using Backend.Data;
 using Backend.Dtos;
 using Backend.Models;
-using System.Security.Claims;
 
 namespace Backend.Services;
 

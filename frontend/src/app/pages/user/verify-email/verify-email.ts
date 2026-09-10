@@ -1,9 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { Alert } from '../../../components/alert/alert';
+import { Alert } from '../../../components/alert.old/alert';
 import { AuthService } from '../../../services/auth';
 import { UserService } from '../../../services/user';
 
@@ -19,13 +19,13 @@ export class VerifyEmail {
   private userService = inject(UserService);
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
-  public userEmail: string | null = null;
+  public emailAddress = signal<string>('');
   public faArrowLeft = faArrowLeft;
 
-  onInit() {
+  ngOnInit(): void {
     this.userService.getEmail().subscribe({
       next: (response: any) => {
-        this.userEmail = response.emailAddress;
+        this.emailAddress.set(response.emailAddress);
       }
     })
   }
@@ -42,26 +42,27 @@ export class VerifyEmail {
   }
 
   changeEmail() {
-    this.userService.changeEmail().subscribe({
-      next: () => {
-        console.log("Email updated successfully.");
-      },
-      error: () => {
-        console.log("Unable to change email.");
-      }
-    });
+    console.log("Change Email clicked...")
+    // this.userService.changeEmail().subscribe({
+    //   next: () => {
+    //     console.log("Email updated successfully.");
+    //   },
+    //   error: () => {
+    //     console.log("Unable to change email.");
+    //   }
+    // });
   }
 
-  onSubmit() {
-    this.authService.verifyEmail().subscribe({
-      next: () => {
-        console.log("Email verified successfully.");
-      },
-      error: () => {
-        console.log("Unable to verify email.");
-      }
-    });
-  }
+  // onSubmit() {
+  //   this.authService.verifyEmail().subscribe({
+  //     next: () => {
+  //       console.log("Email verified successfully.");
+  //     },
+  //     error: () => {
+  //       console.log("Unable to verify email.");
+  //     }
+  //   });
+  // }
   
   logout(): void {
     this.authService.logout().subscribe({

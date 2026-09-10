@@ -1,4 +1,4 @@
-export interface ChangeEmailRequest {
+export interface UpdateEmailRequest {
     newEmail: string;
     password: string;
 }

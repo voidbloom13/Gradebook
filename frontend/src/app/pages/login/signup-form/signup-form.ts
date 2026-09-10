@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { Alert } from '../../../components/alert/alert';
+import { Alert } from '../../../components/alert.old/alert';
 import { AuthService } from '../../../services/auth';
 import { passwordMatchValidator } from '../../../services/custom-validators/passwordMatchValidator';
 import { SignupRequest } from '../../../services/models/signup-request';
@@ -75,7 +75,7 @@ export class SignupForm {
     ]
   },
   {
-    validators: passwordMatchValidator()
+    validators: passwordMatchValidator('password', 'confirmPassword')
   })
 
   onSubmit(): void {

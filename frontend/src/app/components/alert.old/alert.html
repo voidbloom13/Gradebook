@@ -1,0 +1,4 @@
+<div class="absolute top-6 right-6 overflow-hidden px-4 py-2 border rounded-sm" [ngClass]="{'bg-red-100 border-red-500 text-red-900': type === 'error', 'bg-amber-100 border-amber-500 text-amber-900': type === 'warning', 'bg-green-100 border-green-500 text-green-900': type === 'success'}" [class.alert-enter]="!isLeaving" [class.alert-exit]="isLeaving">
+  {{ message }}
+  <div class="absolute bottom-0 left-0 h-1 bg-cyan-400 alert-timer" [style.animation-duration.ms]="duration"></div>
+</div>

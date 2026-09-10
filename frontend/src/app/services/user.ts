@@ -1,7 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/http';
-import { ChangeEmailRequest } from './models/change-email-request';
-import { ChangePasswordRequest } from './models/change-password-request';
+import { HttpClient } from '@angular/common/http';
+import { EmailResponse } from './models/email-response';
+import { UpdateEmailRequest } from './models/update-email-request';
+import { ResetPasswordRequest } from './models/reset-password-request';
 import { ForgotPasswordRequest } from './models/forgot-password-request';
 import { environment } from '../environments/environment';
 
@@ -14,24 +15,24 @@ export class UserService {
     private http = inject(HttpClient);
 
     getEmail() {
-        return this.http.get(
+        return this.http.get<EmailResponse>(
             `${environment.apiUrl}/api/user/get-email`,
             { withCredentials: true }
         );
     }
 
-    changeEmail(changeEmailRequest: ChangeEmailRequest) {
+    updateEmail(updateEmailRequest: UpdateEmailRequest) {
         return this.http.post(
-            `${environment.apiUrl}/api/user/change-email`,
-            changeEmailRequest,
+            `${environment.apiUrl}/api/user/update-email`,
+            updateEmailRequest,
             { withCredentials: true }
         );
     }
 
-    changePassword(changePasswordRequest: ChangePasswordRequest) {
+    resetPassword(resetPasswordRequest: ResetPasswordRequest) {
         return this.http.post(
-            `${environment.apiUrl}/api/user/change-password`,
-            changePasswordRequest,
+            `${environment.apiUrl}/api/user/reset-password`,
+            resetPasswordRequest,
             { withCredentials: true }
         );
     }

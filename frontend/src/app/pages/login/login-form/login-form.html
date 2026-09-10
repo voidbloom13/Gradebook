@@ -1,6 +1,6 @@
-@if (alertMessage) {
+<!-- @if (alertMessage) {
   <app-alert [type]="alertType" [message]="alertMessage" [duration]="5000" (dismissed)="alertMessage = null" />
-}
+} -->
 <form class="w-full p-4 flex flex-col gap-2 items-center justify-center" [formGroup]="loginRequestForm" (ngSubmit)="onSubmit()">
   <div class="w-full">
     <div class="w-full relative">
@@ -35,6 +35,6 @@
   </div>
   <div class="w-full flex justify-evenly items-center">
     <button class="w-28 px-2 py-1 justify-self-start text-cyan-800 font-bold bg-cyan-200 hover:bg-cyan-50 active:bg-cyan-50 border border-cyan-950 rounded-sm disabled:cursor-not-allowed disabled:bg-mist-300 transition-all duration-150" id="loginSubmit" type="submit" [disabled]="loginRequestForm.invalid || isSubmitting">Login</button>
-    <button class="" type="button" (click)="forgotPassword()">Forgot password?</button>
+    <a class="text-cyan-200/70 hover:text-cyan-200 font-bold cursor-pointer" (click)="forgotPassword()">Forgot password?</a>
   </div>
 </form>

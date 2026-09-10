@@ -13,15 +13,15 @@ public static class UserEndpoints
             return result;
         });
 
-        app.MapPost("/api/user/change-email", async (HttpContext ctx, AppDbContext db) =>
+        app.MapPost("/api/user/update-email", async (HttpContext ctx, AppDbContext db) =>
         {
-            var result = await UserService.ChangeEmailAsync(ctx, db);
+            var result = await UserService.UpdateEmailAsync(ctx, db);
             return result;
         });
 
-        app.MapPost("/api/user/change-password", async (HttpContext ctx, AppDbContext db) =>
+        app.MapPost("/api/user/reset-password", async (HttpContext ctx, AppDbContext db) =>
         {
-            var result = await UserService.ChangePasswordAsync(ctx, db);
+            var result = await UserService.ResetPasswordAsync(ctx, db);
             return result;
         });
 
@@ -30,5 +30,7 @@ public static class UserEndpoints
             var result = await UserService.ForgotPasswordAsync(ctx, db);
             return result;
         });
+
+        return app;
     }
 }

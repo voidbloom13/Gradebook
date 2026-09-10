@@ -3,8 +3,8 @@
     <div class="w-full flex flex-col justify-center items-center gap-2">
         <p class="text-cyan-50">
             We've sent a 6-digit code to 
-            <strong class="font-bold">
-                {{userEmail}}
+            <strong class="font-bold text-cyan-300/75">
+                {{ emailAddress() }}
             </strong>
         </p>
         <p class="text-cyan-50">
@@ -14,15 +14,15 @@
     <form></form>
     <div class="w-full flex flex-col justify-center items-center gap-4">
         <p class="text-cyan-50">Didn't get the code? 
-            <a class="text-cyan-200/85 font-bold cursor-pointer" (click)="generateCode()">Resend Code</a>
+            <a class="text-cyan-200/70 hover:text-cyan-200 font-bold cursor-pointer" (click)="generateCode()">Resend Code</a>
         </p>
         <p class="text-cyan-50">
             Click 
-            <a class="text-cyan-200/70 font-bold" (click)="changeEmail()">here</a> 
+            <a class="text-cyan-200/70 hover:text-cyan-200 font-bold cursor-pointer" (click)="changeEmail()">here</a> 
             to update your email address
         </p>
         <hr class="w-9/10 text-mist-300/30" />
-        <a class="text-cyan-100/40 cursor-pointer" (click)="logout()">
+        <a class="text-cyan-100/40 hover:text-cyan-100/75 cursor-pointer" (click)="logout()">
             <fa-icon [icon]="faArrowLeft"></fa-icon>
             Back to login
         </a>

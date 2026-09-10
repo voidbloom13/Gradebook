@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, inject, signal, effect } from '@angular/core';
 import { NgClass } from '@angular/common';
+import { AlertService } from '../../services/alert/alert-service';
 
 @Component({
   imports: [NgClass],
@@ -9,39 +10,28 @@ import { NgClass } from '@angular/common';
 })
 
 export class Alert {
-  @Input() message = '';
-  @Input() duration = 5000;
-  @Input() type: 'error' | 'warning' | 'success' = 'error';
-  @Output() dismissed = new EventEmitter<void>();
+  alertService = inject(AlertService);
+  alertState = signal< 'entering' | 'exiting' >('entering');
 
-  isLeaving = false;
+  constructor() {
+    effect((onCleanup: any) => {
+      const alert = this.alertService.currentAlert();
 
-  private leaveTimer?: ReturnType<typeof setTimeout>;
-  private removeTimer?: ReturnType<typeof setTimeout>;
+      if (!alert) {
+        return;
+      }
 
-  ngOnInit(): void {
-    this.startTimers();
-  }
+      console.log('entering');
 
-  private startTimers() {
-    const exitAnimDuration = 300;
+      const timer = setTimeout(() => {
+        this.alertState.set('exiting');
+        console.log('exiting');
+      }, alert.duration - 300)
 
-    this.leaveTimer = setTimeout(() => {
-      this.isLeaving = true;
-    }, this.duration - exitAnimDuration)
 
-    this.removeTimer = setTimeout(() => {
-      this.dismissed.emit();
-    }, this.duration)
-  }
-
-  ngOnDestroy() {
-    if (this.leaveTimer) {
-      clearTimeout(this.leaveTimer);
-    }
-
-    if (this.removeTimer) {
-      clearTimeout(this.removeTimer);
-    }
+      onCleanup(() => {
+        clearTimeout(timer);
+      });
+    });
   }
 }

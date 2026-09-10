@@ -57,6 +57,7 @@ app.UseAuthorization();
 
 app.MapGet("/", () => "API is running...");
 app.MapAuthenticationEndpoints();
+app.MapUserEndpoints();
 
 await app.SeedInitialDataAsync();
 

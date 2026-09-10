@@ -4,12 +4,12 @@ import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { Alert } from '../../../components/alert/alert';
+import { AlertService } from '../../../services/alert/alert-service';
 import { AuthService } from '../../../services/auth';
 import { LoginRequest } from '../../../services/models/login-request';
 
 @Component({
-  imports: [ReactiveFormsModule, FontAwesomeModule, Alert],
+  imports: [ReactiveFormsModule, FontAwesomeModule],
   selector: 'app-login-form',
   styleUrl: './login-form.css',
   templateUrl: './login-form.html',
@@ -20,9 +20,8 @@ import { LoginRequest } from '../../../services/models/login-request';
 export class LoginForm {
   private authService = inject(AuthService);
   private formBuilder = inject(FormBuilder);
+  private alert = inject(AlertService);
   private router = inject(Router);
-  public alertType: 'error' | 'warning' | 'success' = 'error';
-  public alertMessage: string | null = null;
   public showPassword = false;
   public faEye = faEye;
   public faEyeSlash = faEyeSlash;
@@ -71,13 +70,13 @@ export class LoginForm {
       error: (e: HttpErrorResponse) => {
         console.log("Error submitting form.");
         if (e.status === 401) {
-          this.alertType = "error";
-          this.alertMessage = "Email or Password is incorrect.";
+          this.alert.showAlert('Incorrect Email or Password.', 'error')
+          this.alert.showAlert('1', 'warning')
+          this.alert.showAlert('2', 'success')
           // show error alert
         }
         if (e.status === 403) {
-          this.alertType = "error";
-          this.alertMessage = "Error: User is forbidden.";
+          this.alert.showAlert('User is forbidden.', 'error', 1500)
         }
         this.isSubmitting = false;
       }

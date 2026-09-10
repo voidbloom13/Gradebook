@@ -1,7 +1,7 @@
-<div class="w-md max-w-[90vw] max-h-[90vh] min-h-[50vh] flex flex-col justify-between bg-black/60 border border-mist-400/40 rounded-lg shadow-black/50 shadow-md">
+<div class="w-md max-w-[90vw] max-h-[90vh] min-h-[50vh] flex flex-col justify-between bg-black/60 backdrop-blur-xs border border-mist-400/40 rounded-lg shadow-black/50 shadow-md">
   @if (displayForm() === "Login") {
     <app-login-form />
-    <hr class="w-9/10 mx-auto text-cyan-700">
+    <hr class="w-9/10 mx-auto text-mist-300/30">
     <div class="flex-grow text-cyan-50 text-lg text-center font-bold">Replace with OAuth2.0</div>
   }
   @if (displayForm() === "Signup") {

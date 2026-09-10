@@ -48,5 +48,7 @@ public static class AuthenticationEndpoints
             return result;
         })
         .RequireAuthorization();
+
+        return app;
     }
 }
