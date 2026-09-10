@@ -10,8 +10,8 @@ import { AlertService } from '../../services/alert/alert-service';
 })
 
 export class Alert {
-  alertService = inject(AlertService);
-  alertState = signal< 'entering' | 'exiting' >('entering');
+  public alertService = inject(AlertService);
+  public alertState = signal< 'entering' | 'exiting' >('entering');
 
   constructor() {
     effect((onCleanup: any) => {
@@ -21,16 +21,21 @@ export class Alert {
         return;
       }
 
-      console.log('entering');
+      this.alertState.set('entering');
 
-      const timer = setTimeout(() => {
+      let exitTimer: ReturnType<typeof setTimeout> | undefined;
+      const displayTimer = setTimeout(() => {
         this.alertState.set('exiting');
-        console.log('exiting');
-      }, alert.duration - 300)
-
+        exitTimer = setTimeout(() => {
+          this.alertService.dismissCurrent();
+        }, 400);
+      }, alert.duration)
 
       onCleanup(() => {
-        clearTimeout(timer);
+        clearTimeout(displayTimer);
+        if (exitTimer) {
+          clearTimeout(exitTimer);
+        }
       });
     });
   }

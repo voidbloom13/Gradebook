@@ -1,6 +1,8 @@
-@if (alertService.currentAlert()) {
-    <div class="absolute top-6 right-6 overflow-hidden px-4 py-2 border rounded-sm" [ngClass]="{'bg-red-100 border-red-500 text-red-900': alertService.currentAlert()?.type === 'error', 'bg-amber-100 border-amber-500 text-amber-900': alertService.currentAlert()?.type === 'warning', 'bg-green-100 border-green-500 text-green-900': alertService.currentAlert()?.type === 'success', 'alert-bounce-in': alertState() === 'entering', 'alert-bounce-out': alertState() === 'exiting'}">
-        {{ alertService.currentAlert()?.message }}
-    <div class="absolute bottom-0 left-0 h-1 bg-cyan-400 alert-timer" [style.animation-duration.ms]="alertService.currentAlert()?.duration"></div>
+@for (alert of alertService.currentAlertArray(); track alert.id) {
+    <div class="absolute top-6 right-6 min-w-72 max-w-sm overflow-hidden px-2 pt-1 pb-2 border rounded-sm" [ngClass]="{'bg-red-100 border-red-500 text-red-900': alert.type === 'error', 'bg-amber-100 border-amber-500 text-amber-900': alert.type === 'warning', 'bg-green-100 border-green-500 text-green-900': alert.type === 'success', 'alert-enter': alertState() === 'entering', 'alert-exit': alertState() === 'exiting'}">
+        <p class="w-full text-right">
+            {{ alert.message }}
+        </p>
+        <div class="absolute bottom-0 left-0 h-[6px] bg-cyan-600 alert-timer" [style.animation-duration.ms]="alert.duration"></div>
     </div>
 }

@@ -70,13 +70,13 @@ export class LoginForm {
       error: (e: HttpErrorResponse) => {
         console.log("Error submitting form.");
         if (e.status === 401) {
-          this.alert.showAlert('Incorrect Email or Password.', 'error')
-          this.alert.showAlert('1', 'warning')
-          this.alert.showAlert('2', 'success')
+          this.alert.createAlert("Message 1", "error", 3000)
+          this.alert.createAlert("Message 2", "warning", 3000)
+          this.alert.createAlert("Message 3","success", 3000)
           // show error alert
         }
         if (e.status === 403) {
-          this.alert.showAlert('User is forbidden.', 'error', 1500)
+          this.alert.createAlert("User is forbidden.", "error", 3000)
         }
         this.isSubmitting = false;
       }
