@@ -7,9 +7,10 @@ import { Alert } from '../models/alert';
 export class AlertService {
     public alerts = signal<Alert[]>([]);
 
-    createAlert(message: string, type: 'error' | 'warning' | 'success', duration: number = 3000) {
+    createAlert(header: string, message: string, type: 'error' | 'warning' | 'success' | 'info', duration: number = 3000) {
         let alert = {
             "id": crypto.randomUUID(),
+            "header": header,
             "message": message,
             "type": type,
             "duration": duration

@@ -47,6 +47,13 @@ export class LoginForm {
     this.router.navigate(['/user/forgot-password']);
   }
 
+  ngOnInit(): void {
+    this.alert.createAlert("Test", "This is a test message. Delete me once styling is complete", "info", 360000);
+    this.alert.createAlert("Test", "This is a test message. Delete me once styling is complete", "success", 3000);
+    this.alert.createAlert("Test", "This is a test message. Delete me once styling is complete", "warning", 3000);
+    this.alert.createAlert("Test", "This is a test message. Delete me once styling is complete", "error", 3000);
+  }
+
   onSubmit(): void {
     this.isSubmitting = true;
     // Create new LoginRequest object and POST /api/auth/login
@@ -55,6 +62,7 @@ export class LoginForm {
       this.isSubmitting = false;
       return;
     }
+
 
     const loginRequest: LoginRequest = {
       email: this.loginRequestForm.controls.email.value!.trim().toLowerCase(),
@@ -70,13 +78,10 @@ export class LoginForm {
       error: (e: HttpErrorResponse) => {
         console.log("Error submitting form.");
         if (e.status === 401) {
-          this.alert.createAlert("Message 1", "error", 3000)
-          this.alert.createAlert("Message 2", "warning", 3000)
-          this.alert.createAlert("Message 3","success", 3000)
-          // show error alert
+          this.alert.createAlert("Unauthorized", "Incorrect Email or Password", "error");
         }
         if (e.status === 403) {
-          this.alert.createAlert("User is forbidden.", "error", 3000)
+          this.alert.createAlert("Forbidden", "User is forbidden.", "error");
         }
         this.isSubmitting = false;
       }
