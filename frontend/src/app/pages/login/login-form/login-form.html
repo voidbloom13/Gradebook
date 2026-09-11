@@ -1,21 +1,17 @@
 <form class="w-full flex flex-col gap-2 items-center justify-center" [formGroup]="loginRequestForm" (ngSubmit)="onSubmit()">
-  <div class="flex flex-col gap-2 py-4 text-center">
-    <fa-icon [icon]="faBookOpen" class="text-violet-300 text-5xl"></fa-icon>
-    <h1 class="text-2xl text-mist-100 font-bold">Welcome Back</h1>
-    <p class="text-mist-300">Please sign in to manage your courses.</p>
-  </div>
   <div class="w-full flex gap-2 px-4 py-3 bg-linear-to-br from-mist-700/60 via-mist-800/60 to-mist-700/60 border border-mist-400/60 focus-within:outline focus-within:outline-2 focus-within:outline-violet-300 rounded-lg text-mist-300 text-lg" [ngClass]="{'border-red-500 focus-within:border-violet-300': loginRequestForm.controls.email.invalid && loginRequestForm.controls.email.touched}">
     <fa-icon [icon]="faEnvelope"></fa-icon>
     <input class="w-full bg-none outline-none placeholder:text-mist-500" id="email" type="email" placeholder="Email Address" formControlName="email" />
   </div>
   <div class="w-full min-h-6 text-red-500">
     @if (loginRequestForm.controls.email.touched && loginRequestForm.controls.email.invalid) {
-      <fa-icon [icon]="faCircleXmark"></fa-icon>
       @if (loginRequestForm.controls.email.hasError('required')) {
+        <fa-icon [icon]="faCircleXmark"></fa-icon>
         <span>
           Email is required.
         </span>
       } @else if (loginRequestForm.controls.email.hasError('email')) {
+        <fa-icon [icon]="faCircleXmark"></fa-icon>
         <span>
           Please enter a valid email address.
         </span>

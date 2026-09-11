@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faBookOpen, faEye, faEyeSlash, faEnvelope, faLock, faCircleXmark, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faEyeSlash, faEnvelope, faLock, faCircleXmark, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { AlertService } from '../../../services/alert/alert-service';
 import { AuthService } from '../../../services/auth';
 import { LoginRequest } from '../../../services/models/login-request';
@@ -24,7 +24,6 @@ export class LoginForm {
   private alert = inject(AlertService);
   private router = inject(Router);
   public showPassword = false;
-  public faBookOpen = faBookOpen;
   public faEye = faEye;
   public faEyeSlash = faEyeSlash;
   public faEnvelope = faEnvelope;

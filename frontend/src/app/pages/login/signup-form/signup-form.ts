@@ -1,16 +1,16 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgClass } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { Alert } from '../../../components/alert.old/alert';
+import { faEye, faEyeSlash, faUser, faEnvelope, faLock, faCircleXmark, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../../../services/auth';
 import { passwordMatchValidator } from '../../../services/custom-validators/passwordMatchValidator';
 import { SignupRequest } from '../../../services/models/signup-request';
 
 @Component({
-  imports: [ReactiveFormsModule, FontAwesomeModule, Alert],
+  imports: [ReactiveFormsModule, NgClass, FontAwesomeModule],
   selector: 'app-signup-form',
   styleUrl: './signup-form.css',
   templateUrl: './signup-form.html',
@@ -19,8 +19,6 @@ export class SignupForm {
   private authService = inject(AuthService);
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
-  public alertType: 'error' | 'warning' | 'success' = 'error';
-  public alertMessage: string | null = null;
   public nameMinLength = 2;
   public nameMaxLength = 50;
   public showPassword = false;
@@ -29,6 +27,11 @@ export class SignupForm {
   public passwordMaxLength = 128;
   public faEye = faEye;
   public faEyeSlash = faEyeSlash;
+  public faUser = faUser;
+  public faEnvelope = faEnvelope;
+  public faLock = faLock;
+  public faCircleXmark = faCircleXmark;
+  public faArrowRight = faArrowRight;
   public isSubmitting = false
 
   signupRequestForm = this.formBuilder.group({
@@ -101,8 +104,8 @@ export class SignupForm {
       error: (e: HttpErrorResponse) => {
         console.log("Error submitting form.")
         if (e.status === 409) {
-          this.alertType = "error";
-          this.alertMessage = "This email address already exists. Please login to continue.";
+          // this.alertType = "error";
+          // this.alertMessage = "This email address already exists. Please login to continue.";
           // show error alert
         }
         this.isSubmitting = false;

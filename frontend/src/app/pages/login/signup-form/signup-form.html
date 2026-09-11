@@ -1,66 +1,74 @@
-@if (alertMessage) {
-  <app-alert [type]="alertType" [message]="alertMessage" [duration]="5000" (dismissed)="alertMessage = null" />
-}
-<form class="w-full p-4 flex flex-col gap-2 items-center justify-center" [formGroup]="signupRequestForm" (ngSubmit)="onSubmit()">
-  <div class="w-full">
-    <div class="w-full relative">
-      <label class="font-bold text-lg text-left text-cyan-50" for="firstName">First Name</label>
-      @if (signupRequestForm.controls.firstName.touched) {
-        @if (signupRequestForm.controls.firstName.hasError('required')) {
-          <span class="absolute right-0 top-1/2 -translate-y-1/2 min-w-fit px-2 py-[2px] inline-flex items-center align-middle text-sm leading-none bg-red-100 border border-red-500 rounded-sm">
-            First Name is required.
-          </span>
-        }
-        @if (signupRequestForm.controls.firstName.hasError('minlength') || signupRequestForm.controls.firstName.hasError('maxlength')) {
-          <span class="absolute right-0 top-1/2 -translate-y-1/2 min-w-fit px-2 py-[2px] inline-flex items-center align-middle text-sm leading-none bg-red-100 border border-red-500 rounded-sm">
-            First Name must be between {{ nameMinLength }} and {{ nameMaxLength }} characters.
-          </span>
-        }
-        @if (signupRequestForm.controls.firstName.hasError('pattern')) {
-          <span class="absolute right-0 top-1/2 -translate-y-1/2 min-w-fit px-2 py-[2px] inline-flex items-center align-middle text-sm leading-none bg-red-100 border border-red-500 rounded-sm">
-            First Name can only contain letters, spaces, hyphens, and apostrophes.
-          </span>
-        }
-      }
-    </div>
-    <input class="w-full px-2 py-1 bg-cyan-100 focus:bg-cyan-50 border border-cyan-950 rounded-sm outline-none active:outline-none" [class.border-red-500]="signupRequestForm.controls.firstName.invalid && signupRequestForm.controls.firstName.touched" id="firstName" type="text" formControlName="firstName" />
+<form class="w-full flex flex-col gap-2 items-center justify-center" [formGroup]="signupRequestForm" (ngSubmit)="onSubmit()">
+  <div class="w-full flex gap-2 px-4 py-3 bg-linear-to-br from-mist-700/60 via-mist-800/60 to-mist-700/60 border border-mist-400/60 focus-within:outline focus-within:outline-2 focus-within:outline-violet-300 rounded-lg text-mist-300 text-lg" [ngClass]="{'border-red-500 focus-within:border-violet-300': signupRequestForm.controls.firstName.invalid && signupRequestForm.controls.firstName.touched}">
+    <fa-icon [icon]="faUser"></fa-icon>
+    <input class="w-full bg-none outline-none placeholder:text-mist-500" id="first-name" type="text" placeholder="First Name" formControlName="firstName" />
   </div>
-  <div class="w-full">
-    <div class="w-full relative">
-      <label class="font-bold text-lg text-left text-cyan-50" for="lastName">Last Name</label>
-      @if (signupRequestForm.controls.lastName.touched) {
-        @if (signupRequestForm.controls.lastName.hasError('required')) {
-          <span class="absolute right-0 top-1/2 -translate-y-1/2 min-w-fit px-2 py-[2px] inline-flex items-center align-middle text-sm leading-none bg-red-100 border border-red-500 rounded-sm">
-            Last Name is required.
-          </span>
-        }
-        @if (signupRequestForm.controls.lastName.hasError('minlength') || signupRequestForm.controls.lastName.hasError('maxlength')) {
-          <span class="absolute right-0 top-1/2 -translate-y-1/2 min-w-fit px-2 py-[2px] inline-flex items-center align-middle text-sm leading-none bg-red-100 border border-red-500 rounded-sm">
-            Last Name must be between {{ nameMinLength }} and {{ nameMaxLength }} characters.
-          </span>
-        }
-        @if (signupRequestForm.controls.lastName.hasError('pattern')) {
-          <span class="absolute right-0 top-1/2 -translate-y-1/2 min-w-fit px-2 py-[2px] inline-flex items-center align-middle text-sm leading-none bg-red-100 border border-red-500 rounded-sm">
-            Last Name can only contain letters, spaces, hyphens, and apostrophes.
-          </span>
-        }
+  <div class="w-full min-h-6 text-red-500">
+    @if (signupRequestForm.controls.firstName.touched) {
+      @if (signupRequestForm.controls.firstName.hasError('required')) {
+        <fa-icon [icon]="faCircleXmark"></fa-icon>
+        <span>
+          First Name is required.
+        </span>
       }
-    </div>
-    <input class="w-full px-2 py-1 bg-cyan-100 focus:bg-cyan-50 border border-cyan-950 rounded-sm outline-none active:outline-none" [class.border-red-500]="signupRequestForm.controls.lastName.invalid && signupRequestForm.controls.lastName.touched" id="lastName" type="text" formControlName="lastName" />
-  </div>
-  <div class="w-full">
-    <div class="w-full relative">
-      <label class="font-bold text-lg text-left text-cyan-50" for="email">Email</label>
-      @if (signupRequestForm.controls.email.touched) {
-        @if (signupRequestForm.controls.email.hasError('email') || signupRequestForm.controls.email.hasError('required')) {
-          <span class="absolute right-0 top-1/2 -translate-y-1/2 min-w-fit px-2 py-[2px] inline-flex items-center align-middle text-sm leading-none bg-red-100 border border-red-500 rounded-sm">
-            Email is required.
-          </span>
-        }
+      @if (signupRequestForm.controls.firstName.hasError('minlength') || signupRequestForm.controls.firstName.hasError('maxlength')) {
+        <fa-icon [icon]="faCircleXmark"></fa-icon>
+        <span>
+          First Name must be between {{ nameMinLength }} and {{ nameMaxLength }} characters.
+        </span>
       }
-    </div>
-    <input class="w-full px-2 py-1 bg-cyan-100 focus:bg-cyan-50 border border-cyan-950 rounded-sm outline-none active:outline-none" [class.border-red-500]="signupRequestForm.controls.email.invalid && signupRequestForm.controls.email.touched" id="email" type="email" formControlName="email" />
+      @if (signupRequestForm.controls.firstName.hasError('pattern')) {
+        <fa-icon [icon]="faCircleXmark"></fa-icon>
+        <span>
+          First Name can only contain letters, spaces, hyphens, and apostrophes.
+        </span>
+      }
+    }
   </div>
+
+  <div class="w-full flex gap-2 px-4 py-3 bg-linear-to-br from-mist-700/60 via-mist-800/60 to-mist-700/60 border border-mist-400/60 focus-within:outline focus-within:outline-2 focus-within:outline-violet-300 rounded-lg text-mist-300 text-lg" [ngClass]="{'border-red-500 focus-within:border-violet-300': signupRequestForm.controls.firstName.invalid && signupRequestForm.controls.firstName.touched}">
+    <fa-icon [icon]="faUser"></fa-icon>
+    <input class="w-full bg-none outline-none placeholder:text-mist-500" id="last-name" type="text" placeholder="Last Name" formControlName="lastName" />
+  </div>
+  <div class="w-full min-h-6 text-red-500">
+    @if (signupRequestForm.controls.lastName.touched) {
+      @if (signupRequestForm.controls.lastName.hasError('required')) {
+        <fa-icon [icon]="faCircleXmark"></fa-icon>
+        <span>
+          Last Name is required.
+        </span>
+      }
+      @if (signupRequestForm.controls.lastName.hasError('minlength') || signupRequestForm.controls.lastName.hasError('maxlength')) {
+        <fa-icon [icon]="faCircleXmark"></fa-icon>
+        <span>
+          Last Name must be between {{ nameMinLength }} and {{ nameMaxLength }} characters.
+        </span>
+      }
+      @if (signupRequestForm.controls.lastName.hasError('pattern')) {
+        <fa-icon [icon]="faCircleXmark"></fa-icon>
+        <span>
+          Last Name can only contain letters, spaces, hyphens, and apostrophes.
+        </span>
+      }
+    }
+  </div>
+ 
+  <div class="w-full flex gap-2 px-4 py-3 bg-linear-to-br from-mist-700/60 via-mist-800/60 to-mist-700/60 border border-mist-400/60 focus-within:outline focus-within:outline-2 focus-within:outline-violet-300 rounded-lg text-mist-300 text-lg" [ngClass]="{'border-red-500 focus-within:border-violet-300': signupRequestForm.controls.email.invalid && signupRequestForm.controls.email.touched}">
+    <fa-icon [icon]="faEnvelope"></fa-icon>
+    <input class="w-full bg-none outline-none placeholder:text-mist-500" id="email" type="email" placeholder="Email Address" formControlName="email" />
+  </div>
+  <div class="w-full min-h-6 text-red-500">
+    @if (signupRequestForm.controls.email.touched && signupRequestForm.controls.email.invalid) {
+      @if (signupRequestForm.controls.email.hasError('required')) {
+        <fa-icon [icon]="faCircleXmark"></fa-icon>
+        <span>Email is required.</span>
+      } @else if (signupRequestForm.controls.email.hasError('email')) {
+        <fa-icon [icon]="faCircleXmark"></fa-icon>
+        <span>Please enter a valid email address.</span>
+      }
+    }
+  </div>
+
   <div class="w-full">
     <div class="w-full relative">
       <label class="font-bold text-lg text-left text-cyan-50" for="password">Password</label>
