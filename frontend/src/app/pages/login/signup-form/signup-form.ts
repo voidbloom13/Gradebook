@@ -72,14 +72,22 @@ export class SignupForm {
       '',
       [
         Validators.required,
-        Validators.minLength(this.passwordMinLength),
-        Validators.maxLength(this.passwordMaxLength),
       ]
     ]
   },
   {
     validators: passwordMatchValidator('password', 'confirmPassword')
   })
+
+  testSubmit(): void {
+    const signupRequest: SignupRequest = {
+      firstName: this.signupRequestForm.controls.firstName.value!.trim(),
+      lastName: this.signupRequestForm.controls.lastName.value!.trim(),
+      email: this.signupRequestForm.controls.email.value!.trim().toLowerCase(),
+      password: this.signupRequestForm.controls.password.value!
+    }
+    console.log(signupRequest);
+  }
 
   onSubmit(): void {
     this.isSubmitting = true;

@@ -35,9 +35,11 @@
       }
     }
   </div>
-  <button class="w-full px-4 py-3 bg-violet-500 hover:bg-violet-400 text-lg text-violet-950 font-bold border border-violet-300 rounded-lg cursor-pointer disabled:cursor-not-allowed disabled:bg-mist-600 disabled:text-mist-300 disabled:border-mist-300 transition-all duration-200" id="loginSubmit" type="submit" [disabled]="loginRequestForm.invalid || isSubmitting">
+  <button class="w-full px-4 py-2 bg-violet-500 hover:bg-violet-400 text-lg text-violet-950 font-bold border border-violet-300 rounded-lg cursor-pointer disabled:cursor-not-allowed disabled:bg-mist-600 disabled:text-mist-300 disabled:border-mist-300 transition-all duration-200" id="loginSubmit" type="submit" [disabled]="loginRequestForm.invalid || isSubmitting">
     Login
     <fa-icon [icon]="faArrowRight"></fa-icon>
   </button>
-  <a class="py-2 text-violet-300/80 hover:text-violet-300 font-bold cursor-pointer transition-color duration-200" (click)="forgotPassword()">Forgot password?</a>
 </form>
+<div class="w-full mt-2 flex justify-center items-center">
+  <a class="text-violet-300/80 hover:text-violet-300 font-bold cursor-pointer transition-color duration-200" (click)="forgotPassword()">Forgot password?</a>
+</div>
