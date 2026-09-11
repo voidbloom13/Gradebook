@@ -1,7 +1,7 @@
 import { Component, inject, signal, effect } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faX, faInfo } from '@fortawesome/free-solid-svg-icons';
+import { faX, faCircleXmark, faTriangleExclamation, faCircleCheck, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { AlertService } from '../../services/alert/alert-service';
 
 @Component({
@@ -15,7 +15,10 @@ export class Alert {
   public alertService = inject(AlertService);
   public alertState = signal< 'entering' | 'exiting' >('entering');
   public faX = faX;
-  public faInfo = faInfo;
+  public faCircleXmark = faCircleXmark;
+  public faTriangleExclamation = faTriangleExclamation;
+  public faCircleCheck = faCircleCheck;
+  public faCircleInfo = faCircleInfo;
   displayTimer: ReturnType<typeof setTimeout> | undefined;
   exitTimer: ReturnType<typeof setTimeout> | undefined;
 

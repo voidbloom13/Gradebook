@@ -1,29 +1,39 @@
 @for (alert of alertService.currentAlertArray(); track alert.id) {
-    <div class="absolute top-6 right-6 min-w-72 max-w-sm overflow-hidden p-2 border rounded-xs backdrop-blur-xs bg-linear-to-br to-black/70" [ngClass]="{'from-red-400/30': alert.type === 'error', 'from-yellow-400/30': alert.type === 'warning', 'from-green-400/30': alert.type === 'success', 'from-blue-400/30': alert.type === 'info', 'alert-enter': alertState() === 'entering', 'alert-exit': alertState() === 'exiting'}">
+    <div class="absolute top-6 right-6 min-w-72 max-w-sm overflow-hidden p-2 pr-3 pb-3 border rounded-xs backdrop-blur-xs bg-linear-to-br to-black/70" [ngClass]="{'from-red-400/30': alert.type === 'error', 'from-yellow-400/30': alert.type === 'warning', 'from-green-400/30': alert.type === 'success', 'from-blue-400/30': alert.type === 'info', 'alert-enter': alertState() === 'entering', 'alert-exit': alertState() === 'exiting'}">
         <button class="absolute top-2 right-2 text-mist-300 cursor-pointer" type="button" (click)="dismiss()">
             <fa-icon [icon]="faX"></fa-icon>
         </button>
-        <div>
-            <h3 class="text-2xl font-bold" [ngClass]="{'text-red-400': alert.type === 'error', 'text-yellow-400': alert.type === 'warning', 'text-green-400': alert.type === 'success', 'text-blue-400': alert.type === 'info'}">
-                @switch (alert.type) {
-                    @case ('error') {
-                        <span>E</span>
-                    }
-                    @case ('warning') {
-                        <span>W</span>
-                    }
-                    @case ('success') {
-                        <span>S</span>
-                    }
-                    @case ('info') {
-                        <span>I</span>
-                    }
+        <div class="w-full flex items-center justify-evenly gap-2">
+            @switch (alert.type) {
+                @case ('error') {
+                    <span class="text-red-400 text-5xl">
+                        <fa-icon [icon]="faCircleXmark"></fa-icon>
+                    </span>
                 }
-                {{ alert.header }}
-            </h3>
-            <p class="text-mist-300 font-bold">
-                {{ alert.message }}
-            </p>
+                @case ('warning') {
+                    <span class="text-yellow-400 text-5xl">
+                        <fa-icon [icon]="faTriangleExclamation"></fa-icon>
+                    </span>
+                }
+                @case ('success') {
+                    <span class="text-green-400 text-5xl">
+                        <fa-icon [icon]="faCircleCheck"></fa-icon>
+                    </span>
+                }
+                @case ('info') {
+                    <span class="text-blue-400 text-5xl">
+                        <fa-icon [icon]="faCircleInfo"></fa-icon>
+                    </span>
+                }
+            }
+            <div>
+                <h3 class="text-2xl font-bold" [ngClass]="{'text-red-400': alert.type === 'error', 'text-yellow-400': alert.type === 'warning', 'text-green-400': alert.type === 'success', 'text-blue-400': alert.type === 'info'}">
+                    {{ alert.header }}
+                </h3>
+                <p class="text-mist-300 font-bold">
+                    {{ alert.message }}
+                </p>
+            </div>
         </div>
         <div class="absolute bottom-0 left-0 h-[6px] bg-cyan-600 alert-timer" [style.animation-duration.ms]="alert.duration"></div>
     </div>

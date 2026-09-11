@@ -1,15 +1,16 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgClass } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { faBookOpen, faEye, faEyeSlash, faEnvelope, faLock, faCircleXmark, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { AlertService } from '../../../services/alert/alert-service';
 import { AuthService } from '../../../services/auth';
 import { LoginRequest } from '../../../services/models/login-request';
 
 @Component({
-  imports: [ReactiveFormsModule, FontAwesomeModule],
+  imports: [ReactiveFormsModule, NgClass, FontAwesomeModule],
   selector: 'app-login-form',
   styleUrl: './login-form.css',
   templateUrl: './login-form.html',
@@ -23,8 +24,13 @@ export class LoginForm {
   private alert = inject(AlertService);
   private router = inject(Router);
   public showPassword = false;
+  public faBookOpen = faBookOpen;
   public faEye = faEye;
   public faEyeSlash = faEyeSlash;
+  public faEnvelope = faEnvelope;
+  public faLock = faLock;
+  public faCircleXmark = faCircleXmark;
+  public faArrowRight = faArrowRight;
   public isSubmitting = false;
 
   loginRequestForm = this.formBuilder.group({
@@ -47,22 +53,13 @@ export class LoginForm {
     this.router.navigate(['/user/forgot-password']);
   }
 
-  ngOnInit(): void {
-    this.alert.createAlert("Test", "This is a test message. Delete me once styling is complete", "info", 360000);
-    this.alert.createAlert("Test", "This is a test message. Delete me once styling is complete", "success", 3000);
-    this.alert.createAlert("Test", "This is a test message. Delete me once styling is complete", "warning", 3000);
-    this.alert.createAlert("Test", "This is a test message. Delete me once styling is complete", "error", 3000);
-  }
-
   onSubmit(): void {
     this.isSubmitting = true;
-    // Create new LoginRequest object and POST /api/auth/login
     this.loginRequestForm.markAllAsTouched();
     if (this.loginRequestForm.invalid) {
       this.isSubmitting = false;
       return;
     }
-
 
     const loginRequest: LoginRequest = {
       email: this.loginRequestForm.controls.email.value!.trim().toLowerCase(),

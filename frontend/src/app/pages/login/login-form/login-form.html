@@ -1,37 +1,47 @@
-<form class="w-full p-4 flex flex-col gap-2 items-center justify-center" [formGroup]="loginRequestForm" (ngSubmit)="onSubmit()">
-  <div class="w-full">
-    <div class="w-full relative">
-      <label class="font-bold text-lg text-left text-cyan-50" for="email">Email</label>
-      @if (loginRequestForm.controls.email.touched) {
-        @if (loginRequestForm.controls.email.hasError('email') || loginRequestForm.controls.email.hasError('required')) {
-          <span class="absolute right-0 top-1/2 -translate-y-1/2 min-w-fit px-2 py-[2px] inline-flex items-center align-middle text-sm leading-none bg-red-100 border border-red-500 rounded-sm">
-            Email is required.
-          </span>
-        }
+<form class="w-full flex flex-col gap-2 items-center justify-center" [formGroup]="loginRequestForm" (ngSubmit)="onSubmit()">
+  <div class="flex flex-col gap-2 py-4 text-center">
+    <fa-icon [icon]="faBookOpen" class="text-violet-300 text-5xl"></fa-icon>
+    <h1 class="text-2xl text-mist-100 font-bold">Welcome Back</h1>
+    <p class="text-mist-300">Please sign in to manage your courses.</p>
+  </div>
+  <div class="w-full flex gap-2 px-4 py-3 bg-linear-to-br from-mist-700/60 via-mist-800/60 to-mist-700/60 border border-mist-400/60 focus-within:outline focus-within:outline-2 focus-within:outline-violet-300 rounded-lg text-mist-300 text-lg" [ngClass]="{'border-red-500 focus-within:border-violet-300': loginRequestForm.controls.email.invalid && loginRequestForm.controls.email.touched}">
+    <fa-icon [icon]="faEnvelope"></fa-icon>
+    <input class="w-full bg-none outline-none placeholder:text-mist-500" id="email" type="email" placeholder="Email Address" formControlName="email" />
+  </div>
+  <div class="w-full min-h-6 text-red-500">
+    @if (loginRequestForm.controls.email.touched && loginRequestForm.controls.email.invalid) {
+      <fa-icon [icon]="faCircleXmark"></fa-icon>
+      @if (loginRequestForm.controls.email.hasError('required')) {
+        <span>
+          Email is required.
+        </span>
+      } @else if (loginRequestForm.controls.email.hasError('email')) {
+        <span>
+          Please enter a valid email address.
+        </span>
       }
-    </div>
-    <input class="w-full px-2 py-1 bg-cyan-100 focus:bg-cyan-50 border border-cyan-950 rounded-sm outline-none active:outline-none" [class.border-red-500]="loginRequestForm.controls.email.invalid && loginRequestForm.controls.email.touched" id="email" type="email" formControlName="email" />
+    }
   </div>
-  <div class="w-full">
-    <div class="w-full relative">
-      <label class="font-bold text-lg text-left text-cyan-50" for="password">Password</label>
-        @if (loginRequestForm.controls.password.touched) {
-          @if (loginRequestForm.controls.password.hasError('required')) {
-            <span class="absolute right-0 top-1/2 -translate-y-1/2 min-w-fit px-2 py-[2px] inline-flex items-center align-middle text-sm leading-none bg-red-100 border border-red-500 rounded-sm">
-              Password is required.
-            </span>
-          }
-        }
-    </div>
-    <div class="w-full flex gap-2 items-center justify-between">
-      <input class="w-full px-2 py-1 bg-cyan-100 focus:bg-cyan-50 border border-cyan-950 rounded-sm outline-none active:outline-none" [class.border-red-500]="loginRequestForm.controls.password.invalid && loginRequestForm.controls.password.touched" id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password" />
-      <button class="text-cyan-50 align-middle cursor-pointer" type="button" (pointerdown)="showPassword=true" (pointerup)="showPassword=false" (pointercancel)="showPassword=false" (pointerleave)="showPassword=false">
-        <fa-icon [icon]="showPassword ? faEyeSlash : faEye"></fa-icon>
-      </button>
-    </div>
+  <div class="w-full flex gap-2 px-4 py-3 bg-linear-to-br from-mist-700/60 via-mist-800/60 to-mist-700/60 border border-mist-400/60 focus-within:outline focus-within:outline-2 focus-within:outline-violet-300 rounded-lg text-mist-300 text-lg" [ngClass]="{'border-red-500 focus-within:border-violet-300': loginRequestForm.controls.password.invalid && loginRequestForm.controls.password.touched}">
+    <fa-icon [icon]="faLock"></fa-icon>
+    <input class="w-full bg-none outline-none active:outline-none text-mist-300 placeholder:text-mist-500 text-lg" id="password" [type]="showPassword ? 'text' : 'password'" placeholder="Password" formControlName="password" />
+    <button class="text-mist-300/60 hover:text-violet-300 align-middle cursor-pointer transition-color duration-200" type="button" (pointerdown)="showPassword=true" (pointerup)="showPassword=false" (pointercancel)="showPassword=false" (pointerleave)="showPassword=false">
+      <fa-icon [icon]="showPassword ? faEyeSlash : faEye"></fa-icon>
+    </button>
   </div>
-  <div class="w-full flex justify-evenly items-center">
-    <button class="w-28 px-2 py-1 justify-self-start text-cyan-800 font-bold bg-cyan-200 hover:bg-cyan-50 active:bg-cyan-50 border border-cyan-950 rounded-sm disabled:cursor-not-allowed disabled:bg-mist-300 transition-all duration-150" id="loginSubmit" type="submit" [disabled]="loginRequestForm.invalid || isSubmitting">Login</button>
-    <a class="text-cyan-200/70 hover:text-cyan-200 font-bold cursor-pointer" (click)="forgotPassword()">Forgot password?</a>
+  <div class="w-full min-h-6 text-red-500">
+    @if (loginRequestForm.controls.password.touched) {
+      @if (loginRequestForm.controls.password.hasError('required')) {
+          <fa-icon [icon]="faCircleXmark"></fa-icon>
+          <span>
+            Password is required.
+          </span>
+      }
+    }
   </div>
+  <button class="w-full px-4 py-3 bg-violet-500 hover:bg-violet-400 text-lg text-violet-950 font-bold border border-violet-300 rounded-lg cursor-pointer disabled:cursor-not-allowed disabled:bg-mist-600 disabled:text-mist-300 disabled:border-mist-300 transition-all duration-200" id="loginSubmit" type="submit" [disabled]="loginRequestForm.invalid || isSubmitting">
+    Login
+    <fa-icon [icon]="faArrowRight"></fa-icon>
+  </button>
+  <a class="py-2 text-violet-300/80 hover:text-violet-300 font-bold cursor-pointer transition-color duration-200" (click)="forgotPassword()">Forgot password?</a>
 </form>
