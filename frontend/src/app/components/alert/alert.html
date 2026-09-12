@@ -1,5 +1,5 @@
 @for (alert of alertService.currentAlertArray(); track alert.id) {
-    <div class="absolute top-6 right-6 min-w-72 max-w-sm overflow-hidden p-2 pr-3 pb-3 border rounded-xs backdrop-blur-xs bg-linear-to-br to-black/70" [ngClass]="{'from-red-400/30': alert.type === 'error', 'from-yellow-400/30': alert.type === 'warning', 'from-green-400/30': alert.type === 'success', 'from-blue-400/30': alert.type === 'info', 'alert-enter': alertState() === 'entering', 'alert-exit': alertState() === 'exiting'}">
+    <div class="absolute z-1000 top-6 right-6 min-w-72 max-w-sm overflow-hidden p-2 pr-3 pb-3 border rounded-xs backdrop-blur-xs bg-linear-to-br to-black/70" [ngClass]="{'from-red-400/30': alert.type === 'error', 'from-yellow-400/30': alert.type === 'warning', 'from-green-400/30': alert.type === 'success', 'from-blue-400/30': alert.type === 'info', 'alert-enter': alertState() === 'entering', 'alert-exit': alertState() === 'exiting'}">
         <button class="absolute top-2 right-2 text-mist-300 cursor-pointer" type="button" (click)="dismiss()">
             <fa-icon [icon]="faX"></fa-icon>
         </button>

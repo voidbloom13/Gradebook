@@ -13,7 +13,7 @@ import { SignupForm } from "./signup-form/signup-form";
 })
 
 export class Login {
-  public displayForm = signal<"Login" | "Signup">("Signup"); // switch back to "Login" once Signup is styled
+  public displayForm = signal<"Login" | "Signup">("Login");
   public faBookOpen = faBookOpen;
 
   showLogin(): void {

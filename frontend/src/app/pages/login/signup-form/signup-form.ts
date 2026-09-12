@@ -5,6 +5,7 @@ import { NgClass } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEye, faEyeSlash, faUser, faEnvelope, faLock, faCircleXmark, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { AlertService } from '../../../services/alert/alert-service';
 import { AuthService } from '../../../services/auth';
 import { passwordMatchValidator } from '../../../services/custom-validators/passwordMatchValidator';
 import { SignupRequest } from '../../../services/models/signup-request';
@@ -16,6 +17,7 @@ import { SignupRequest } from '../../../services/models/signup-request';
   templateUrl: './signup-form.html',
 })
 export class SignupForm {
+  private alertService = inject(AlertService);
   private authService = inject(AuthService);
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
@@ -79,15 +81,6 @@ export class SignupForm {
     validators: passwordMatchValidator('password', 'confirmPassword')
   })
 
-  testSubmit(): void {
-    const signupRequest: SignupRequest = {
-      firstName: this.signupRequestForm.controls.firstName.value!.trim(),
-      lastName: this.signupRequestForm.controls.lastName.value!.trim(),
-      email: this.signupRequestForm.controls.email.value!.trim().toLowerCase(),
-      password: this.signupRequestForm.controls.password.value!
-    }
-    console.log(signupRequest);
-  }
 
   onSubmit(): void {
     this.isSubmitting = true;
@@ -107,14 +100,13 @@ export class SignupForm {
     this.authService.signup(signupRequest).subscribe({
       next: (response: any) => {
         this.isSubmitting = false;
+        this.alertService.createAlert("User Created", `User ${signupRequest.firstName} was created successfully.`, "success");
         this.router.navigate(['/session-check', response])
       },
       error: (e: HttpErrorResponse) => {
         console.log("Error submitting form.")
         if (e.status === 409) {
-          // this.alertType = "error";
-          // this.alertMessage = "This email address already exists. Please login to continue.";
-          // show error alert
+          this.alertService.createAlert("Duplicate Entry", "This email address already exists. Please login to continue.", "error");
         }
         this.isSubmitting = false;
       }
