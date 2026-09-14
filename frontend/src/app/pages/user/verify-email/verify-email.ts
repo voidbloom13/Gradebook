@@ -1,14 +1,14 @@
 import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormArray, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgClass } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { Alert } from '../../../components/alert.old/alert';
 import { AuthService } from '../../../services/auth';
 import { UserService } from '../../../services/user';
 
 @Component({
-  imports: [ReactiveFormsModule, FontAwesomeModule, Alert],
+  imports: [ReactiveFormsModule, NgClass, FontAwesomeModule],
   selector: 'app-verify-email',
   styleUrl: './verify-email.css',
   templateUrl: './verify-email.html',
@@ -21,6 +21,21 @@ export class VerifyEmail {
   private router = inject(Router);
   public emailAddress = signal<string>('');
   public faArrowLeft = faArrowLeft;
+
+  emailVerificationCodeForm = this.formBuilder.group({
+    code: this.formBuilder.nonNullable.array(
+      Array.from({ length: 6 }, () =>
+        this.formBuilder.nonNullable.control('',[
+          Validators.required,
+          Validators.pattern(/^\d$/)
+        ])
+      )
+    )
+  });
+
+  get code() {
+    return this.emailVerificationCodeForm.controls.code;
+  }
 
   ngOnInit(): void {
     this.userService.getEmail().subscribe({
