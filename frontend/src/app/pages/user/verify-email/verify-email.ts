@@ -6,6 +6,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../../../services/auth';
 import { UserService } from '../../../services/user';
+import { VerificationCode } from '../../../services/models/verification-code';
 
 @Component({
   imports: [ReactiveFormsModule, NgClass, FontAwesomeModule],
@@ -21,6 +22,7 @@ export class VerifyEmail {
   private router = inject(Router);
   public emailAddress = signal<string>('');
   public faArrowLeft = faArrowLeft;
+  public isSubmitting = false;
 
   emailVerificationCodeForm = this.formBuilder.group({
     code: this.formBuilder.nonNullable.array(
@@ -68,17 +70,29 @@ export class VerifyEmail {
     // });
   }
 
-  // onSubmit() {
-  //   this.authService.verifyEmail().subscribe({
-  //     next: () => {
-  //       console.log("Email verified successfully.");
-  //     },
-  //     error: () => {
-  //       console.log("Unable to verify email.");
-  //     }
-  //   });
-  // }
-  
+  onSubmit() {
+    this.isSubmitting = true;
+    this.emailVerificationCodeForm.markAllAsTouched();
+    if (this.emailVerificationCodeForm.invalid) {
+      this.isSubmitting = false;
+      return;
+    }
+
+    const emailVerificationCode: VerificationCode = {
+      code: "" // handle form concatenation and pass to code
+    };
+    this.authService.verifyEmail(emailVerificationCode).subscribe({
+      next: () => {
+        // create alert for email verification success
+        console.log("Email verified successfully.");
+      },
+      error: () => {
+        // create alert for email verification errors
+        console.log("Unable to verify email.");
+      }
+    });
+  }
+
   logout(): void {
     this.authService.logout().subscribe({
       next: () => {

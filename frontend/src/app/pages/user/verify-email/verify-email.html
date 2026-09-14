@@ -1,8 +1,8 @@
 <div class="w-xl max-w-[90vw] max-h-[90vh] min-h-[60vh] flex flex-col justify-evenly items-center bg-black/60 backdrop-blur-xs border border-mist-400/40 rounded-lg shadow-black/50 shadow-md">
     <h1 class="text-center text-3xl text-cyan-50 font-bold">Verify Your Email</h1>
-    <div class="w-full flex flex-col justify-center items-center gap-2">
+    <div class="w-9/10 flex flex-col justify-center items-center gap-2 text-center">
         <p class="text-cyan-50">
-            We've sent a 6-digit code to 
+            We've sent a 6-digit code to
             <strong class="font-bold text-cyan-300/75">
                 {{ emailAddress() }}
             </strong>
@@ -11,20 +11,23 @@
             Please enter the code below to verify your email.
         </p>
     </div>
-    <form class="w-full" [formGroup]="emailVerificationCodeForm" ngSubmit="onSubmit()">
-        <div class="w-full flex flex-row justify-evenly items-center" formArrayName="code">
+    <form class="w-9/10 flex flex-col gap-2 sm:gap-4 justify-center items-center" [formGroup]="emailVerificationCodeForm" ngSubmit="onSubmit()">
+        <div class="w-full flex flex-row gap-2 justify-center items-center" formArrayName="code">
             @for (control of code.controls; track $index) {
-                <input class="w-14 h-14 bg-linear-to-br from-mist-700/60 via-mist-800/60 to-mist-700/60 border border-mist-400/60 focus:outline focus:outline-2 focus:outline-violet-300 rounded-lg text-mist-300 text-3xl" [ngClass]="{'border-red-500 focus:border-violet-300': control.touched && control.invalid}" type="text" [formControlName]="$index"/>
+                <input class="min-w-9 max-w-12 sm:max-w-14 w-1/7 aspect-square bg-linear-to-br from-mist-700/60 via-mist-800/60 to-mist-700/60 border border-mist-400/60 focus:outline focus:outline-2 focus:outline-violet-300 rounded-lg text-mist-300 text-2xl sm:text-3xl text-center" [ngClass]="{'border-red-500 focus:border-violet-300': control.touched && control.invalid}" type="text" inputmode="numeric" maxlength="1" [formControlName]="$index"/>
             }
         </div>
+        <button class="max-w-9/10 w-xs px-4 py-2 bg-violet-500 hover:bg-violet-400 text-md sm:text-lg text-violet-950 font-bold border border-violet-300 rounded-lg cursor-pointer disabled:cursor-not-allowed disabled:bg-mist-300 transition-all duration-200" id="email-verify-submit" type="submit" [disabled]="emailVerificationCodeForm.invalid || isSubmitting">
+          Verify
+        </button>
     </form>
-    <div class="w-full flex flex-col justify-center items-center gap-4">
-        <p class="text-cyan-50">Didn't get the code? 
+    <div class="w-9/10 flex flex-col justify-center items-center gap-4 text-center">
+        <p class="text-cyan-50">Didn't get the code?
             <a class="text-cyan-200/70 hover:text-cyan-200 font-bold cursor-pointer" (click)="generateCode()">Resend Code</a>
         </p>
         <p class="text-cyan-50">
-            Click 
-            <a class="text-cyan-200/70 hover:text-cyan-200 font-bold cursor-pointer" (click)="changeEmail()">here</a> 
+            Click
+            <a class="text-cyan-200/70 hover:text-cyan-200 font-bold cursor-pointer" (click)="changeEmail()">here</a>
             to update your email address
         </p>
         <hr class="w-9/10 text-mist-300/30" />
