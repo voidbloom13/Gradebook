@@ -6,6 +6,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../../../services/auth';
 import { UserService } from '../../../services/user';
+import { AlertService } from '../../../services/alert/alert-service';
 import { VerificationCode } from '../../../services/models/verification-code';
 
 @Component({
@@ -21,6 +22,7 @@ export class VerifyEmail {
   readonly MAX_INDEX: number = this.CODE_LENGTH - 1;
   private authService = inject(AuthService);
   private userService = inject(UserService);
+  private alertService = inject(AlertService);
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
   public emailAddress = signal<string>('');
@@ -59,20 +61,36 @@ export class VerifyEmail {
 
   onInput(event: Event, index: number): void {
     const input = event.target as HTMLInputElement;
-    const sanitizedValue = this.sanitizeInput(input.value).slice(0, 1);
+    const sanitizedValue = this.sanitizeInput(input.value).slice(-1);
+    input.value = sanitizedValue;
+    this.code.at(index).setValue(sanitizedValue);
 
-    if (/^\d$/.test(sanitizedValue) && index < this.MAX_INDEX) {
+    if (sanitizedValue && index < this.MAX_INDEX) {
       this.focusInput(index + 1);
     }
   }
 
-  onPaste() {
-    // Troubleshoot onInput before completing this method
-    // onInput needs to discard non-digit chars before setting value
-    // Theory: onInput needs to preventDefault() and setValue(sanitizedValue)
+  onPaste(event: ClipboardEvent): void {
+    event.preventDefault();
+    const pastedContents = event.clipboardData?.getData('text') ?? '';
+    const sanitizedInput = this.sanitizeInput(pastedContents).slice(0, this.CODE_LENGTH);
+
+    this.code.controls.forEach(c => {
+      c.setValue("");
+    })
+
+    for (let i = 0; i < sanitizedInput.length; i++) {
+      this.code.at(i).setValue(sanitizedInput[i]);
+    }
+
+    if (sanitizedInput.length > this.MAX_INDEX) {
+      this.focusInput(this.MAX_INDEX);
+    } else {
+      this.focusInput(sanitizedInput.length);
+    }
   }
 
-  onKeydown(event: KeyboardEvent, index:number): void {
+  onKeydown(event: KeyboardEvent, index: number): void {
 
     if (event.key === "Backspace") {
       event.preventDefault();
@@ -88,6 +106,7 @@ export class VerifyEmail {
   }
 
   ngOnInit(): void {
+    this.alertService.createAlert("TODO", "Implement route guard before moving on.", "info", 99999999);
     this.userService.getEmail().subscribe({
       next: (response: any) => {
         this.emailAddress.set(response.emailAddress);
@@ -107,15 +126,7 @@ export class VerifyEmail {
   }
 
   changeEmail() {
-    console.log("Change Email clicked...")
-    // this.userService.changeEmail().subscribe({
-    //   next: () => {
-    //     console.log("Email updated successfully.");
-    //   },
-    //   error: () => {
-    //     console.log("Unable to change email.");
-    //   }
-    // });
+    this.router.navigate(['/user/update-email']);
   }
 
   onSubmit() {
@@ -126,16 +137,20 @@ export class VerifyEmail {
       return;
     }
 
+    const submittedCode = this.code.value.join("");
+
     const emailVerificationCode: VerificationCode = {
-      code: "" // handle form concatenation and pass to code
+      code: submittedCode // handle form concatenation and pass to code
     };
     this.authService.verifyEmail(emailVerificationCode).subscribe({
       next: () => {
         // create alert for email verification success
+        // .RequireAuthorization() on endpoint?
         console.log("Email verified successfully.");
       },
       error: () => {
         // create alert for email verification errors
+        // which errors should I display alerts for? Which get specific messages vs generic "verification failed"?
         console.log("Unable to verify email.");
       }
     });
