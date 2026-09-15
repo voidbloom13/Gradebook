@@ -14,7 +14,7 @@
     <form class="w-9/10 flex flex-col gap-2 sm:gap-4 justify-center items-center" [formGroup]="emailVerificationCodeForm" ngSubmit="onSubmit()">
         <div class="w-full flex flex-row gap-2 justify-center items-center" formArrayName="code">
             @for (control of code.controls; track $index) {
-                <input class="min-w-9 max-w-12 sm:max-w-14 w-1/7 aspect-square bg-linear-to-br from-mist-700/60 via-mist-800/60 to-mist-700/60 border border-mist-400/60 focus:outline focus:outline-2 focus:outline-violet-300 rounded-lg text-mist-300 text-2xl sm:text-3xl text-center" [ngClass]="{'border-red-500 focus:border-violet-300': control.touched && control.invalid}" type="text" inputmode="numeric" maxlength="1" [formControlName]="$index"/>
+                <input class="min-w-9 max-w-12 sm:max-w-14 w-1/7 aspect-square bg-linear-to-br from-mist-700/60 via-mist-800/60 to-mist-700/60 border border-mist-400/60 focus:outline focus:outline-2 focus:outline-violet-300 rounded-lg text-mist-300 text-2xl sm:text-3xl text-center" [ngClass]="{'border-red-500 focus:border-violet-300': control.touched && control.invalid}" type="text" inputmode="numeric" #codeInput maxlength="1" (input)="onInput($event, $index)" (keydown)="onKeydown($event, $index)" [formControlName]="$index"/>
             }
         </div>
         <button class="max-w-9/10 w-xs px-4 py-2 bg-violet-500 hover:bg-violet-400 text-md sm:text-lg text-violet-950 font-bold border border-violet-300 rounded-lg cursor-pointer disabled:cursor-not-allowed disabled:bg-mist-300 transition-all duration-200" id="email-verify-submit" type="submit" [disabled]="emailVerificationCodeForm.invalid || isSubmitting">
