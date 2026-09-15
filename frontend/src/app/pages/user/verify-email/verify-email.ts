@@ -166,4 +166,15 @@ export class VerifyEmail {
       }
     });
   }
+
+  testEmail(): void {
+    this.userService.testEmail().subscribe({
+      next: () => {
+        this.alertService.createAlert("Success", "Email Sent Successfully", "success")
+      },
+      error: () => {
+        this.alertService.createAlert("Error", "Email Failed To Send", "error")
+      }
+    })
+  }
 }

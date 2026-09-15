@@ -44,4 +44,12 @@ export class UserService {
             { withCredentials: true }
         );
     }
+
+    testEmail() {
+        return this.http.post(
+            `${environment.apiUrl}/api/auth/test-email`,
+            {},
+            { withCredentials: true}
+        );
+    }
 }

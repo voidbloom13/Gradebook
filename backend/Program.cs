@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Backend.Data;
 using Backend.Endpoints;
 using Backend.Services;
+using Backend.Services.Email;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,10 @@ var connectionString =
     );
 
 builder.Services.AddSingleton<IPasswordHasher, PasswordHasherService>();
+builder.Services.Configure<EmailSettings>(
+    builder.Configuration.GetSection("Email")
+);
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<EmailVerificationService>();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString)  

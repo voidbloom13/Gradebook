@@ -1,5 +1,6 @@
 using Backend.Data;
 using Backend.Services;
+using Backend.Services.Email;
 
 namespace Backend.Endpoints;
 
@@ -48,6 +49,17 @@ public static class AuthenticationEndpoints
             return result;
         })
         .RequireAuthorization();
+
+
+        // Temporary to test EmailService
+        app.MapPost("/api/auth/test-email", async (IEmailService emailService) =>
+        {
+            await emailService.SendEmailAsync(
+                "test@test.com", "Test Subject", "<h1>Test HTML Body</h1><p>Test paragraph</p>"
+            );
+
+            return Results.Ok();
+        });
 
         return app;
     }
