@@ -116,8 +116,8 @@ export class VerifyEmail {
 
   generateCode() {
     this.authService.generateEmailVerificationCode().subscribe({
-      next: () => {
-        console.log("Code generated successfully.");
+      next: (response: any) => {
+        console.log(response);
       },
       error: () => {
         console.log("Unable to generate new code.");
@@ -147,6 +147,7 @@ export class VerifyEmail {
         // create alert for email verification success
         // .RequireAuthorization() on endpoint?
         console.log("Email verified successfully.");
+        this.router.navigate(['/dashboard']);
       },
       error: () => {
         // create alert for email verification errors

@@ -136,8 +136,14 @@ namespace GradebookApi.Migrations
                     b.Property<int>("FailedAttempts")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("IsUsed")
+                    b.Property<DateTime?>("InvalidatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsValid")
                         .HasColumnType("boolean");
+
+                    b.Property<DateTime>("ResendAvailableAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");

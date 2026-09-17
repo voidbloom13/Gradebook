@@ -137,11 +137,12 @@ public static class AuthenticationService
             return Results.Unauthorized();
         }
 
-        await emailVerificationService.GenerateCodeAsync(user);
+        string code = await emailVerificationService.GenerateCodeAsync(user);
 
         return Results.Ok(new
         {
-            message = "New Email verification code generated successfully."
+            message = "New Email verification code generated successfully.",
+            code = code
         });
     }
 

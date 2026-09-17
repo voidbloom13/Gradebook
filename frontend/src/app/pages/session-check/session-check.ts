@@ -21,7 +21,7 @@ export class SessionCheck {
         if (!response.isEmailVerified) {
           this.router.navigate(['/user/verify-email']);
         } else if (response.requirePasswordChange) {
-          this.router.navigate(['/user/change-password']);
+          this.router.navigate(['/user/reset-password']);
         } else this.router.navigate(['/dashboard']);
       },
       error: (e: HttpErrorResponse) => {

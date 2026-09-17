@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GradebookApi.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -68,6 +68,32 @@ namespace GradebookApi.Migrations
                     table.ForeignKey(
                         name: "FK_Courses_Users_TeacherId",
                         column: x => x.TeacherId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EmailVerificationCodes",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CodeHash = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ExpiresAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ResendAvailableAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    FailedAttempts = table.Column<int>(type: "integer", nullable: false),
+                    IsValid = table.Column<bool>(type: "boolean", nullable: false),
+                    InvalidatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    VerifiedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmailVerificationCodes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EmailVerificationCodes_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -203,6 +229,11 @@ namespace GradebookApi.Migrations
                 columns: new[] { "TermSeason", "TermYear" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_EmailVerificationCodes_UserId",
+                table: "EmailVerificationCodes",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Enrollments_CourseId",
                 table: "Enrollments",
                 column: "CourseId");
@@ -222,6 +253,9 @@ namespace GradebookApi.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "EmailVerificationCodes");
+
             migrationBuilder.DropTable(
                 name: "Enrollments");
 

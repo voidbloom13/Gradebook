@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GradebookApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260909200502_MoveAttemptsToEmailVerificationCodes")]
-    partial class MoveAttemptsToEmailVerificationCodes
+    [Migration("20260917194716_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -139,8 +139,14 @@ namespace GradebookApi.Migrations
                     b.Property<int>("FailedAttempts")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("IsUsed")
+                    b.Property<DateTime?>("InvalidatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsValid")
                         .HasColumnType("boolean");
+
+                    b.Property<DateTime>("ResendAvailableAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");

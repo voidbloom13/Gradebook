@@ -21,6 +21,10 @@ export class UserService {
         );
     }
 
+    loadDashboard() {
+        // get user and return routing fields (isEmailVerified/requirePasswordReset)
+    }
+
     updateEmail(updateEmailRequest: UpdateEmailRequest) {
         return this.http.post(
             `${environment.apiUrl}/api/user/update-email`,
