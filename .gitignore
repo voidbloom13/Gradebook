@@ -4,6 +4,7 @@ Thumbs.db
 *.iml
 *.iws
 *.ipr
+**/core.*
 out/
 .vscode/
 .env
