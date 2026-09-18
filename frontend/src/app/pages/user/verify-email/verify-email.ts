@@ -25,6 +25,8 @@ export class VerifyEmail {
   private alertService = inject(AlertService);
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
+  private resendAvailableAt = signal<Date>(new Date(Date.now()));
+  public resendCountdown = signal<number>(0);
   public emailAddress = signal<string>('');
   public faArrowLeft = faArrowLeft;
   public isSubmitting = false;
@@ -105,11 +107,16 @@ export class VerifyEmail {
     }
   }
 
+  calculateCountdown() {
+
+  }
+
   ngOnInit(): void {
     this.alertService.createAlert("TODO", "Implement route guard before moving on.", "info", 99999999);
-    this.userService.getEmail().subscribe({
+    this.userService.initVerifyEmail().subscribe({
       next: (response: any) => {
         this.emailAddress.set(response.emailAddress);
+        this.resendAvailableAt.set(new Date(response.resendAvailableAt));
       }
     })
   }

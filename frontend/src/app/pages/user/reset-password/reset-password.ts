@@ -3,19 +3,20 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import { Alert } from '../../../components/alert.old/alert';
+import { AuthService } from '../../../services/auth';
 import { UserService } from '../../../services/user';
 import { passwordMatchValidator } from '../../../services/custom-validators/passwordMatchValidator';
 import { ResetPasswordRequest } from '../../../services/models/reset-password-request';
 
 @Component({
-  imports: [ReactiveFormsModule, FontAwesomeModule, Alert],
+  imports: [ReactiveFormsModule, FontAwesomeModule],
   selector: 'app-reset-password',
   styleUrl: './reset-password.css',
   templateUrl: './reset-password.html',
 })
 
 export class ResetPassword {
+  private authService = inject(AuthService);
   private userService = inject(UserService);
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
@@ -56,15 +57,23 @@ export class ResetPassword {
       ]
     ]
   },
-{
-  validators: passwordMatchValidator('newPassword', 'confirmPassword')
-})
+  {
+    validators: passwordMatchValidator('newPassword', 'confirmPassword')
+  })
 
   public backToDashboard() {
     this.router.navigate(['/dashboard']);
   }
 
-  public forgotPassword() {
+  logout(): void {
+    this.authService.logout().subscribe({
+      next: () => {
+        this.router.navigate(['/']);
+      }
+    })
+  }
+
+  forgotPassword() {
     this.router.navigate(['/user/forgot-password']);
   }
 
@@ -84,8 +93,6 @@ export class ResetPassword {
     this.userService.resetPassword(resetPasswordRequest).subscribe({
       next: (response: any) => {
         this.isSubmitting = false;
-        this.alertType = 'success';
-        this.alertMessage = 'Password updated successfully!';
         this.router.navigate(['/dashboard']);
       }
     })

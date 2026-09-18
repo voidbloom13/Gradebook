@@ -18,6 +18,19 @@ public class EmailVerificationService
         _emailService = emailService;
     }
 
+    public async Task<EmailVerificationCode?> GetValidCodeAsync(User user)
+    {
+        var code = await _dbContext.EmailVerificationCodes
+            .Where(c =>
+                c.UserId == user.Id
+                && c.IsValid
+                && c.FailedAttempts < 5
+                && c.ExpiresAt > DateTime.UtcNow)
+            .OrderByDescending(c => c.CreatedAt)
+            .FirstOrDefaultAsync();
+        return code;
+    }
+
     public async Task<string> GenerateCodeAsync(User user)
     {
         var code = RandomNumberGenerator
@@ -47,15 +60,7 @@ public class EmailVerificationService
 
     public async Task<bool> VerifyCodeAsync(string code, User user)
     {
-        var verificationCode = await _dbContext.EmailVerificationCodes
-            .Where(c =>
-                c.UserId == user.Id
-                && c.IsValid
-                && c.FailedAttempts < 5
-                && c.ExpiresAt > DateTime.UtcNow)
-            .OrderByDescending(c => c.CreatedAt)
-            .FirstOrDefaultAsync();
-        
+        var verificationCode = await GetValidCodeAsync(user);
         if (verificationCode == null)
         {
             return false;

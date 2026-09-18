@@ -101,7 +101,7 @@ export class SignupForm {
       next: (response: any) => {
         this.isSubmitting = false;
         this.alertService.createAlert("User Created", `User ${signupRequest.firstName} was created successfully.`, "success");
-        this.router.navigate(['/session-check', response])
+        this.router.navigate(['/dashboard']);
       },
       error: (e: HttpErrorResponse) => {
         console.log("Error submitting form.")
@@ -112,6 +112,5 @@ export class SignupForm {
       }
     })
   }
-
 }
 

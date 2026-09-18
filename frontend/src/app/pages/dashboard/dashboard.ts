@@ -17,7 +17,19 @@ export class Dashboard {
   private router = inject(Router);
 
   ngOnInit(): void {
-    this.userService.loadDashboard();
+    this.userService.initDashboard().subscribe({
+      next: (response: any) => {
+        if (!response.isEmailVerified) {
+          this.router.navigate(['/user/verify-email']);
+        }
+        if (response.requirePasswordChange) {
+          this.router.navigate(['/user/reset-password']);
+        }
+      },
+      error: () => {
+        return;
+      }
+    });
     // route user if verify-email or reset-password is needed
   }
 

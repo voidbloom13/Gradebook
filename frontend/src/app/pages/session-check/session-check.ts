@@ -18,11 +18,7 @@ export class SessionCheck {
     this.authService.checkSession().subscribe({
       next: (response: any) => {
         console.log(response);
-        if (!response.isEmailVerified) {
-          this.router.navigate(['/user/verify-email']);
-        } else if (response.requirePasswordChange) {
-          this.router.navigate(['/user/reset-password']);
-        } else this.router.navigate(['/dashboard']);
+        this.router.navigate(['/dashboard']);
       },
       error: (e: HttpErrorResponse) => {
         if (e.status === 401) {

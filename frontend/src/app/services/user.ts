@@ -14,15 +14,21 @@ import { environment } from '../environments/environment';
 export class UserService {
     private http = inject(HttpClient);
 
-    getEmail() {
-        return this.http.get<EmailResponse>(
-            `${environment.apiUrl}/api/user/get-email`,
+    initDashboard() {
+        // get user and return routing fields (isEmailVerified/requirePasswordReset)
+        return this.http.post(
+            `${environment.apiUrl}/api/user/init-dashboard`,
+            {},
             { withCredentials: true }
-        );
+        )
     }
 
-    loadDashboard() {
-        // get user and return routing fields (isEmailVerified/requirePasswordReset)
+    initVerifyEmail() {
+        return this.http.post<EmailResponse>(
+            `${environment.apiUrl}/api/user/init-verify-email`,
+            {},
+            { withCredentials: true }
+        );
     }
 
     updateEmail(updateEmailRequest: UpdateEmailRequest) {

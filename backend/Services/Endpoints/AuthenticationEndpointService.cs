@@ -1,36 +1,24 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 using Backend.Data;
 using Backend.Dtos;
 using Backend.Models;
+using Backend.Services.Helpers;
 
-namespace Backend.Services;
+namespace Backend.Services.Endpoints;
 
-public static class AuthenticationService
+public static class AuthenticationEndpointService
 {
     public static async Task<IResult> ValidateSessionAsync(HttpContext context, AppDbContext db)
     {
-        var userIdClaim = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (
-            context.User.Identity?.IsAuthenticated != true
-            || !Guid.TryParse(userIdClaim, out var userId))
-        {
-            return Results.Unauthorized();
-        }
-        var user = await db.Users.FirstOrDefaultAsync<User>(u => u.Id == userId);
+        var user = await UserService.GetUserAsync(context, db);
         if (user == null)
         {
             return Results.Unauthorized();
         }
 
-        return Results.Ok(new
-        {
-            name = user.FirstName + " " + user.LastName,
-            isEmailVerified = user.IsEmailVerified,
-            requirePasswordChange = user.RequirePasswordChange
-        });
+        return Results.Ok();
     }
 
     public static async Task<IResult> LoginAsync(HttpContext context, AppDbContext db)
@@ -88,7 +76,6 @@ public static class AuthenticationService
 
         // Check if email exists
         var emailExists = await db.Users.AnyAsync<User>(u => u.Email == signupRequest.Email);
-
         if (emailExists)
         {
             return Results.Conflict();
@@ -126,12 +113,7 @@ public static class AuthenticationService
 
     public static async Task<IResult> GenerateEmailVerificationCodeAsync(HttpContext context, AppDbContext db, EmailVerificationService emailVerificationService)
     {
-        var userIdClaim = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (!Guid.TryParse(userIdClaim, out var userId))
-        {
-            return Results.Unauthorized();
-        }
-        var user = await db.Users.FirstOrDefaultAsync<User>(u => u.Id == userId);
+        var user = await UserService.GetUserAsync(context, db);
         if (user == null)
         {
             return Results.Unauthorized();
@@ -148,12 +130,7 @@ public static class AuthenticationService
 
     public static async Task<IResult> VerifyEmailVerificationCodeAsync(HttpContext context, AppDbContext db, EmailVerificationService emailVerificationService)
     {
-        var userIdClaim = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (!Guid.TryParse(userIdClaim, out var userId))
-        {
-            return Results.Unauthorized();
-        }
-        var user = await db.Users.FirstOrDefaultAsync<User>(u => u.Id == userId);
+        var user = await UserService.GetUserAsync(context, db);
         if (user == null)
         {
             return Results.Unauthorized();
@@ -182,8 +159,8 @@ public static class AuthenticationService
         }
         var code = request.code;
 
-        var emailVerificationSuccessful = await emailVerificationService.VerifyCodeAsync(code, user);
-        if (!emailVerificationSuccessful)
+        var isVerificationSuccussful = await emailVerificationService.VerifyCodeAsync(code, user);
+        if (!isVerificationSuccussful)
         {
             return Results.BadRequest(new
             {
